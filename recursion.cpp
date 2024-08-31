@@ -68,6 +68,12 @@ bool palindrome(int i, string &s) {
     if(s[i] != s[s.size() - i - 1]) return false;
     return palindrome(i+1, s);
 }
+// int main(){
+//     string s ="madam";
+//     cout << palindrome(0, s);
+//     return 0;
+// }
+
 
 int main(){
     string s ="madam";
