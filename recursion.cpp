@@ -74,9 +74,36 @@ bool palindrome(int i, string &s) {
 //     return 0;
 // }
 
+// Palindrome Code with No spaces and No Uppercase
+// class Solution {
+// public:
+// bool isPalindrome(string s) {
+//     string pal = "";
+//     for (char i : s) {
+//         i = tolower(i);
+//         if (isalpha(i) || isdigit(i)) pal.push_back(i);
+//     }
+
+//     int n = pal.size(), left = 0, right = n - 1;
+//     if (n == 0 || n == 1) return true;
+//     while (left <= right) {
+//         if (pal[left] == pal[right]) {
+//             left++;
+//             right--;
+//         } else return false;
+//     }
+//     return true;
+// }
+// };
+
+// Fibonacci Number
+int fib(int n) {
+        if(n<=1) return n;
+        int ans = fib(n-1) + fib(n-2);
+        return ans;
+}
 
 int main(){
-    string s ="madam";
-    cout << palindrome(0, s);
-    return 0;
+    int n = 10;
+    cout << fib(n);
 }
