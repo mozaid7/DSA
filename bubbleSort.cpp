@@ -1,6 +1,8 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+// the max. element is pushed to the end of the array with the completion of each iteration. (j) & (j+1) is compared & the greater number is swaped to the next index, this continues and the element reaches the end.
+
 void bubble_sort(int arr[], int n) {
     for(int i=n-1; i>=1; i--) {
         for(int j=0; j<=i-1; j++) {
