@@ -1,6 +1,8 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+// start the iteration form the 1st element i.e. i=0 and consider it as minimum, then find other minimum in the array and swap it with the "i"th iteration.
+
 void selection_sort(int arr[], int n) {
     for(int i=0; i<=n-2; i++) {
         int mini = i;
