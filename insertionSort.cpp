@@ -1,6 +1,8 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+// picks up the element & places it in it's correct position. It picks an element checks if it is lesser than its previous element & swaps if true, it checks continue till the minimum element reaches it's correct position.
+
 void insertion_sort(int arr[], int n) {
     for(int i=0; i<=n-1; i++) {
         int j = i;
