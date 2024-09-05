@@ -85,3 +85,36 @@ void rotate(vector<int>& nums, int k) {
     reverse(nums.begin(), nums.begin() + k);
     reverse(nums.begin() + k, nums.end());
 }
+
+// Moving zeros tho the end.
+vector<int> moveZeros(int n, vector<int> a) {
+    int j = -1;
+    for(int i=0; i<n; i++) {
+        if(a[i] == 0) {
+            j = i;
+            break;
+        }
+    }
+    // no non zero numbers
+    if(j == -1) return a;
+
+    for(int i = j+1; i<n; i++) {
+        if(a[i] != 0) {
+            swap(a[i],a[j]);
+            j++;
+        }
+    }
+    return a;
+}
+
+// Linear Search
+int linearSearch(int arr[], int n, int k) {
+    int check = -1;
+    for(int i=0; i<n; i++) {
+        if(arr[i] == k) {
+            check = 1;
+            return i;
+        }
+    }
+    return check;
+}
