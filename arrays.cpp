@@ -177,3 +177,17 @@ vector<int> arrayIntersection(vector<int> &arr1, int n, vector<int> &arr2, int m
     }
     return ans;
 }
+
+// Intersection of two Un-sorted Arrays
+vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+    vector<int> ans;
+    unordered_set<int> set1,set2;
+    for(int i=0; i<nums1.size(); i++) {
+        set1.insert(nums1[i]);
+    }
+    for(int i=0; i<nums2.size(); i++){
+        if(set1.find(nums2[i])!=set1.end())set2.insert(nums2[i]);
+    }
+    for(auto x:set2)ans.push_back(x);
+    return ans;
+}
