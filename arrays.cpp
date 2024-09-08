@@ -191,3 +191,38 @@ vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
     for(auto x:set2)ans.push_back(x);
     return ans;
 }
+
+// Missing Number
+int missingNumber(vector<int>& nums) {
+    int n = nums.size();
+    long sum = (n*(n+1))/2; // Sum of length of array nums.
+    long s2 = accumulate(nums.begin(),nums.end(),0); // Sum of actual array with a missing number.
+    return sum - s2; // Difference is the missing answer.
+}
+
+// Max consecutive ones
+int findOnes(vector<int> &nums) {
+    int maxi = 0;
+    int cnt = 0;
+    for(int i=0; i<nums.size(); i++) {
+        if(nums[i] == 1) {
+            cnt++;
+            maxi = max(maxi, cnt);
+        }
+        else {
+            cnt = 0;
+        }
+    }
+    return maxi;
+}
+
+// Element appearing once
+// XOR of 0^any_number = that number.
+// XOR of any two similar no is zero.
+int singleElement(vector<int> &arr) {
+    int xorr = 0;
+    for(int i=0; i<arr.size(); i++) {
+        xorr = xorr ^ arr[i];
+    }
+    return xorr;
+}
