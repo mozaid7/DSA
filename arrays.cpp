@@ -226,3 +226,5 @@ int singleElement(vector<int> &arr) {
     }
     return xorr;
 }
+
+// Longest Sub-Array with sum K
