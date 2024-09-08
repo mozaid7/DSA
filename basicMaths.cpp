@@ -1,6 +1,8 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+// Comments added for details.
+
 // Count Digits
 int count (int n) {
     int counter = 0;
