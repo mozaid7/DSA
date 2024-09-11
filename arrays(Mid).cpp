@@ -177,3 +177,43 @@ vector<int> nextPermutation(vector<int> &permutation) {
     reverse(permutation.begin() + ind + 1, permutation.end());
     return permutation;
 }
+
+// Leaders in an Array
+vector<int> superiorElements(vector<int>&arr) {
+    vector<int> ans;
+    int n = arr.size();
+    int maxi = INT_MIN;
+    for(int i=n-1; i>=0; i--){
+        if(arr[i] > maxi) {
+            ans.push_back(arr[i]);
+        }
+        //keep track of right max.
+        maxi = max(maxi, arr[i]);
+    }
+    sort(ans.begin(), ans.end());
+    return ans;
+}
+
+// Longest Consecutive Sequence
+int longestSuccessiveElements(vector<int>&nums) {
+    int n = nums.size();
+    if(n==0) return 0;
+    int longest = 1;
+    unordered_set<int> st;
+    for(int i=0; i<n; i++) {
+        st.insert(nums[i]);
+    }
+
+    for(auto it: st) {
+        if(st.find(it - 1) == st.end()) {
+            int cnt = 1;
+            int x = it;
+            while(st.find(x+1) != st.end()) {
+                x = x+1;
+                cnt++;
+            }
+            longest = max(longest, cnt);
+        }
+    }
+    return longest;
+}
