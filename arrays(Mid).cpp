@@ -3,11 +3,11 @@ using namespace std;
 // Array medium level problems.
 
 // Two Sum Problem
-vector<int> twoSum(vector<int> &nums, int target) {
+vector<int> twoSum(vector<int> &permutation, int target) {
     map<int, int> mpp;
-    int n = nums.size();
+    int n = permutation.size();
     for(int i=0; i<n; i++) {
-        int num = nums[i];
+        int num = permutation[i];
         int moreNeeded = target - num;
         if(mpp.find(moreNeeded) != mpp.end()) {
             return {mpp[moreNeeded], i};
@@ -95,17 +95,17 @@ int maximumProfit(vector<int> &prices) {
 }
 
 // Rearrange Array elements by Sign
-vector<int> rearrangeArray(vector<int>& nums) {
-    int n = nums.size();
+vector<int> rearrangeArray(vector<int>& permutation) {
+    int n = permutation.size();
     vector<int> ans(n,0);
     int posIndex = 0, negIndex = 1;
     for(int i=0; i<n; i++) {
-        if(nums[i] < 0) {
-            ans[negIndex] = nums[i];
+        if(permutation[i] < 0) {
+            ans[negIndex] = permutation[i];
             negIndex += 2;
         }
         else {
-            ans[posIndex] = nums[i];
+            ans[posIndex] = permutation[i];
             posIndex += 2;
         }
     }
@@ -147,4 +147,33 @@ vector<int> alternateNumbers(vector<int>& arr) {
             index++;
         }
     }
+}
+
+// Next Permutation using STL
+vector<int> nextPermutation(vector<int> &permutation, int n) {
+  next_permutation(permutation.begin(), permutation.end());
+  return permutation;
+}
+
+vector<int> nextPermutation(vector<int> &permutation) {
+    int ind = -1;
+    int n = permutation.size();
+    for(int i = n-2; i>=0; i--) {
+        if(permutation[i] < permutation[i+1]) {
+            ind = i;
+            break;
+        }
+    }
+    if(ind == -1) {
+        reverse(permutation.begin(), permutation.end());
+        return permutation;
+    }
+    for(int i=n-1; i>ind; i--) {
+        if(permutation[i] > permutation[ind]) {
+            swap(permutation[i], permutation[ind]);
+            break;
+        }
+    }
+    reverse(permutation.begin() + ind + 1, permutation.end());
+    return permutation;
 }
