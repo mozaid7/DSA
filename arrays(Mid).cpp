@@ -3,11 +3,11 @@ using namespace std;
 // Array medium level problems.
 
 // Two Sum Problem
-vector<int> twoSum(vector<int> &permutation, int target) {
+vector<int> twoSum(vector<int> &nums, int target) {
     map<int, int> mpp;
-    int n = permutation.size();
+    int n = nums.size();
     for(int i=0; i<n; i++) {
-        int num = permutation[i];
+        int num = nums[i];
         int moreNeeded = target - num;
         if(mpp.find(moreNeeded) != mpp.end()) {
             return {mpp[moreNeeded], i};
@@ -95,24 +95,24 @@ int maximumProfit(vector<int> &prices) {
 }
 
 // Rearrange Array elements by Sign
-vector<int> rearrangeArray(vector<int>& permutation) {
-    int n = permutation.size();
+vector<int> rearrangeArray(vector<int>& nums) {
+    int n = nums.size();
     vector<int> ans(n,0);
     int posIndex = 0, negIndex = 1;
     for(int i=0; i<n; i++) {
-        if(permutation[i] < 0) {
-            ans[negIndex] = permutation[i];
+        if(nums[i] < 0) {
+            ans[negIndex] = nums[i];
             negIndex += 2;
         }
         else {
-            ans[posIndex] = permutation[i];
+            ans[posIndex] = nums[i];
             posIndex += 2;
         }
     }
     return ans;
 }
 
-// Rearrange Array elements by Sign where Positive & Negative elements are not the same.
+// Rearrange Array elements by Sign where Positive & Negative elements are not of the same number.
 vector<int> alternateNumbers(vector<int>& arr) {
     vector<int> pos, neg;
     int n = arr.size();
@@ -150,32 +150,33 @@ vector<int> alternateNumbers(vector<int>& arr) {
 }
 
 // Next Permutation using STL
-vector<int> nextPermutation(vector<int> &permutation, int n) {
-  next_permutation(permutation.begin(), permutation.end());
-  return permutation;
+vector<int> nextPermutation(vector<int> &nums, int n) {
+  next_permutation(nums.begin(), nums.end());
+  return nums;
 }
 
-vector<int> nextPermutation(vector<int> &permutation) {
+// Next Permutation implementation
+vector<int> nextPermutation(vector<int> &nums) {
     int ind = -1;
-    int n = permutation.size();
+    int n = nums.size();
     for(int i = n-2; i>=0; i--) {
-        if(permutation[i] < permutation[i+1]) {
+        if(nums[i] < nums[i+1]) {
             ind = i;
             break;
         }
     }
     if(ind == -1) {
-        reverse(permutation.begin(), permutation.end());
-        return permutation;
+        reverse(nums.begin(), nums.end());
+        return nums;
     }
     for(int i=n-1; i>ind; i--) {
-        if(permutation[i] > permutation[ind]) {
-            swap(permutation[i], permutation[ind]);
+        if(nums[i] > nums[ind]) {
+            swap(nums[i], nums[ind]);
             break;
         }
     }
-    reverse(permutation.begin() + ind + 1, permutation.end());
-    return permutation;
+    reverse(nums.begin() + ind + 1, nums.end());
+    return nums;
 }
 
 // Leaders in an Array
@@ -216,4 +217,82 @@ int longestSuccessiveElements(vector<int>&nums) {
         }
     }
     return longest;
+}
+
+// Set Matrix to zero where there is a zero in row or col.
+vector<vector<int>> zeroMatrix(vector<vector<int>> &matrix, int n, int m) {
+	int row[n] = {0}; //unordered_set<int> setRows;
+	int col[m] = {0}; //unordered_set<int> setColumns;
+	for(int i=0; i<n; i++) {
+		for(int j=0; j<m; j++) {
+			if(matrix[i][j] == 0) {
+				row[i] = 1; //setRows.insert(i);
+				col[j] = 1; //setColumns.insert(j);
+			}
+		}
+	}
+	for(int i=0; i<n; i++) {
+		for(int j=0; j<m; j++) {
+			if(row[i] || col[j]) {
+				matrix[i][j] = 0;
+			}
+            // if(setRows.count(i) > 0 || setColumns.count(j) > 0){
+            //       matrix[i][j] = 0;
+            //  }
+		}
+	}
+	return matrix;
+}
+
+// Rotate a matrix by 90 degress.
+void rotate(vector<vector<int>>& matrix) {
+    int n = matrix.size();
+    // Transpose
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<=i; j++) {
+            swap(matrix[i][j], matrix[j][i]);
+        }
+    }
+    // Reverse
+    for(int i=0; i<n; i++) {
+        reverse(matrix[i].begin(), matrix[i].end());
+    }
+}
+
+// Spiral Matrix
+vector<int> printSpiral(vector<vector<int>> matrix) {
+  vector<int> ans;
+  int n = matrix.size(); // no. of nows
+  int m = matrix[0].size(); // no. of columns
+  int top = 0, left = 0, bottom = n - 1, right = m - 1;
+  
+  // Loop until all elements are not traversed.
+  while (top <= bottom && left <= right) {
+    // For moving left to right
+    for (int i = left; i <= right; i++) {
+        ans.push_back(matrix[top][i]);
+    }
+    top++;
+
+    // For moving top to bottom.
+    for (int i = top; i <= bottom; i++) {
+        ans.push_back(matrix[i][right]);
+    }
+    right--;
+    
+    // For moving right to left.
+    if (top <= bottom) {
+      for (int i = right; i >= left; i--)
+       ans.push_back(matrix[bottom][i]);
+    }
+    bottom--;
+    
+    // For moving bottom to top.
+    if (left <= right) {
+      for (int i = bottom; i >= top; i--)
+        ans.push_back(matrix[i][left]);
+    }
+    left++;
+  }
+  return ans;
 }
