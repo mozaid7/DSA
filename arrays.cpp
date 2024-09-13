@@ -247,7 +247,7 @@ int longestSubarray(vector<int> a, long long k) {
     return maxLen;
 }
 
-// Longest Sub-Array with sum K (for Negatives & Zeroes)
+// Longest Sub-Array with sum K (for Positives, Negatives & Zeroes)
 int longestSubarray(vector<int> a, int k) {
     map<long long, int> preSumMap;
     long long sum = 0;
@@ -267,4 +267,19 @@ int longestSubarray(vector<int> a, int k) {
         }
     }
     return maxLen;
+}
+
+// Count the no. of Sub-Arrays with sum K
+int findAllSubarraysWithGivenSum(vector < int > & ar, int k) {
+    int n = ar.size();
+    map<int, int>mpp;
+    mpp[0] = 1;
+    int preSum = 0; int cnt = 0;
+    for(int i=0; i<n; i++) {
+        preSum += ar[i];
+        int rem = preSum - k;
+        cnt += mpp[rem];
+        mpp[preSum] += 1;
+    }
+    return cnt;
 }
