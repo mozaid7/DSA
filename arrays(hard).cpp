@@ -25,7 +25,6 @@ vector<vector<int>> pascalTriangle(int N) {
 // Majority element > n/3 of given array
 vector<int> majorityElement(vector<int> v) {
     int n = v.size(); //size of the array
-
     int cnt1 = 0, cnt2 = 0; // counts
     int el1 = INT_MIN; // element 1
     int el2 = INT_MIN; // element 2
@@ -46,7 +45,6 @@ vector<int> majorityElement(vector<int> v) {
             cnt1--, cnt2--;
         }
     }
-
     vector<int> ls; // list of answers
     // Manually check if the stored elements in
     // el1 and el2 are the majority elements:
