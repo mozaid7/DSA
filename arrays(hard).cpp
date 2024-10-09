@@ -31,11 +31,11 @@ vector<int> majorityElement(vector<int> v) {
 
     // applying the Extended Boyer Moore's Voting Algorithm:
     for (int i = 0; i < n; i++) {
-        if (cnt1 == 0 && el2 != v[i]) {
+        if (cnt1 == 0 && v[i] != el2 ) {
             cnt1 = 1;
             el1 = v[i];
         }
-        else if (cnt2 == 0 && el1 != v[i]) {
+        else if (cnt2 == 0 && v[i] != el1 ) {
             cnt2 = 1;
             el2 = v[i];
         }
