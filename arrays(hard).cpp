@@ -155,3 +155,43 @@ int maxLen(int A[], int n){
     }
     return maxi; 
 }
+
+// merge overlapping sub-intervals
+vector<vector<int>> mergeOverlappingIntervals(vector<vector<int>> &arr) {
+    int n = arr.size();
+    sort(arr.begin(), arr.end());
+    vector<vector<int>> ans;
+    for(int i=0; i<n; i++) {
+        if(ans.empty() || arr[i][0] > ans.back()[1]) {
+            ans.push_back(arr[i]);
+        }
+        else {
+            ans.back()[1] = max(ans.back()[1], arr[i][1]);
+        }
+    }
+    return ans;
+}
+
+// Count sub-arrays with XOR as K
+int subarraysWithXorK(vector<int> a, int k) {
+    int n = a.size(); //size of the given array.
+    int xr = 0;
+    map<int, int> mpp; //declaring the map.
+    mpp[xr]++; //setting the value of 0.
+    int cnt = 0;
+
+    for (int i = 0; i < n; i++) {
+        // prefix XOR till index i:
+        xr = xr ^ a[i];
+
+        //By formula: x = xr^k:
+        int x = xr ^ k;
+
+        // add the occurrence of xr^k to the count:
+        cnt += mpp[x];
+
+        // Insert the prefix xor till index i into the map:
+        mpp[xr]++;
+    }
+    return cnt;
+}
