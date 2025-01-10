@@ -257,9 +257,37 @@ Node* insertAtK(Node* head, int el, int k){
     }
     return head;
 }
+// int main(){
+//     vector<int> arr = {12,4,3,5,8,7};
+//     Node* head = convertArrToLL(arr);
+//     head = insertAtK(head, 69, 3);
+//     print(head);
+// }
+
+// insert before the given value i.e. value from the given LL
+Node* insertBeforeVal(Node* head, int el, int val){
+    if (head == NULL){ // when LL is empty
+        return NULL; 
+    }
+    if(head->data == val){  // when inserting before the head
+        Node* temp = new Node(el, head);
+        return temp;
+    }
+    Node* temp = head;
+    while(temp->next != NULL){
+        if(temp->next->data == val){
+            Node* newNode = new Node(el);
+            newNode->next = temp->next;
+            temp->next = newNode;
+            break;
+        }
+        temp = temp->next;
+    }
+    return head;
+}
 int main(){
     vector<int> arr = {12,4,3,5,8,7};
     Node* head = convertArrToLL(arr);
-    head = insertAtK(head, 69, 3);
+    head = insertBeforeVal(head, 89, 3);
     print(head);
 }
