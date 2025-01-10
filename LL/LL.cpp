@@ -7,11 +7,13 @@ class Node {
     int data;
     Node* next;
 
+    public:
     Node(int data1, Node* next1){
         data = data1;
         next = next1;
     }
 
+    public:
     Node(int data1){
         data = data1;
         next = nullptr;
@@ -25,24 +27,6 @@ class Node {
 // }
 
 // coverting arr to LL
-// Node* convertArrToLL(vector<int> arr){
-//     Node* head = new Node(arr[0]);
-//     Node* mover = head;
-//     for(int i =1; i<arr.size(); i++){
-//         Node* temp = new Node(arr[i]);
-//         mover->next = temp;
-//         mover = temp;
-//     }
-//     return head;
-// }
-// int main(){
-//     vector<int> arr = {12,4,3,5};
-//     Node* head = convertArrToLL(arr);
-//     cout << head->data;
-// }
-
-// LL traversal 
-// first declare the LL and print the Head then traverse
 Node* convertArrToLL(vector<int> arr){
     Node* head = new Node(arr[0]);
     Node* mover = head;
@@ -53,6 +37,24 @@ Node* convertArrToLL(vector<int> arr){
     }
     return head;
 }
+// int main(){
+//     vector<int> arr = {12,4,3,5};
+//     Node* head = convertArrToLL(arr);
+//     cout << head->data;
+// }
+
+// LL traversal 
+// first declare the LL and print the Head then traverse
+// Node* convertArrToLL(vector<int> arr){
+//     Node* head = new Node(arr[0]);
+//     Node* mover = head;
+//     for(int i =1; i<arr.size(); i++){
+//         Node* temp = new Node(arr[i]);
+//         mover->next = temp;
+//         mover = temp;
+//     }
+//     return head;
+// }
 // int main(){
 //     vector<int> arr = {12,4,3,5};
 //     Node* head = convertArrToLL(arr);
@@ -196,13 +198,68 @@ Node* removeEle(Node* head, int el){
 //     print(head);
 // }
 
+// insert at Head
 Node* insertHead(Node* head, int val){
-    Node* temp = new Node(val, head);
+    Node* temp = new Node(val, head); // return new Node(val,head);
+    return temp;
+}
+// int main(){
+//     vector<int> arr = {12,4,3,5,8,7};
+//     Node* head = convertArrToLL(arr);
+//     head = insertHead(head, 132);
+//     print(head);
+// }
+
+// insert at Tail
+Node* insertTail(Node* head, int val){
+    if(head == NULL) {
+        return new Node(val);
+    }
+    Node* temp = head;
+    while(temp->next != NULL){
+        temp = temp->next;
+    }
+    temp->next = new Node(val, nullptr);
+    return head;
+}
+// int main(){
+//     vector<int> arr = {12,4,3,5,8,7};
+//     Node* head = convertArrToLL(arr);
+//     head = insertTail(head, 77);
+//     print(head);
+// }
+
+// insert at a specified position i.e. K
+Node* insertAtK(Node* head, int el, int k){
+    if (head == NULL){ // when LL is empty
+        if(k==1){
+            return new Node(el);
+        }
+        else{
+            return head;
+        } 
+    }
+    if(k == 1){  // when inserting at the head i.e. k=1
+        Node* temp = new Node(el, head);
+        return temp;
+    }
+    int cnt = 0;
+    Node* temp = head;
+    while(temp != NULL){
+        cnt++;
+        if(cnt == k-1){
+            Node* newNode = new Node(el);
+            newNode->next = temp->next;
+            temp->next = newNode;
+            break;
+        }
+        temp = temp->next;
+    }
     return head;
 }
 int main(){
     vector<int> arr = {12,4,3,5,8,7};
     Node* head = convertArrToLL(arr);
-    head = insertHead(head,100);
+    head = insertAtK(head, 69, 3);
     print(head);
 }
