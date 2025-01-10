@@ -291,3 +291,11 @@ int main(){
     head = insertBeforeVal(head, 89, 3);
     print(head);
 }
+
+// Deleting the given node when head is not given
+Node* deleteWithoutHead(Node* node){
+    Node* temp = node->next; // create a temp node which is next to the node to be deleted
+    node->data = temp->data; // copy the data from the temp node
+    node->next = temp->next; // remove the temp node from between
+    delete temp;
+}
