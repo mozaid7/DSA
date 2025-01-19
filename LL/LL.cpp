@@ -299,3 +299,40 @@ Node* deleteWithoutHead(Node* node){
     node->next = temp->next; // remove the temp node from between
     delete temp;
 }
+
+// Reverse a LL with Iterative method
+Node* reverseLL(Node* head){
+    Node* curr = head;
+    Node* prev = NULL;
+    Node* next = NULL;
+    while(curr != NULL){
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+
+// Reverse a LL with recursion
+Node* reverseLLRecursion(Node* head){
+    if(head == NULL || head->next == NULL){
+        return head;
+    }
+    Node* newHead = reverseLLRecursion(head);
+    Node* front = head->next;
+    front->next = head;
+    head->next = NULL;
+    return newHead;
+}
+
+// Middle of LL using Tortoise and Hare method
+Node* middleOfLL(Node* head){
+    Node* slow = head;
+    Node* fast = head;
+    if(fast != NULL && fast->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}
