@@ -368,22 +368,46 @@ Node* startOfLoop(Node* head){
     return NULL;
 }
 
-// Fake commit created
-// Detecting the starting node of the loop
-Node* startOfLoop(Node* head){
+// Detect the length of the loop in a LL
+int findLength(Node* slow, Node* fast){
+    int cnt = 1;
+    fast = fast->next;
+    while(slow != fast){
+        cnt++;
+        fast = fast->next;
+    }
+    return cnt;
+}
+int lengthOfLoop(Node* head){
     Node* slow = head;
     Node* fast = head;
     while(fast != NULL && fast->next != NULL){
         slow = slow->next;
         fast = fast->next->next;
-        if(slow == fast){
-            slow = head;
-            while(slow != fast){
-                slow = slow->next;
-                fast = fast->next;
-            }
-            return slow;
-        }
+        if(slow == fast) return findLength(slow, fast);
     }
-    return NULL;
+    return 0;
+}
+
+// LL is palindrome or not
+bool isPalindrome(Node* head){
+    Node* slow = head;
+    Node* fast = head;
+    while(fast->next != NULL && fast->next->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    Node* newHead = reverseLLRecursion(slow->next);
+    Node* first = head;
+    Node* second = newHead;
+    while(second != NULL){
+        if(first->data != second->data){
+            reverseLLRecursion(newHead);
+            return false;
+        }
+        first = first->next;
+        second = second->next;
+    }
+    reverseLLRecursion(newHead);
+    return true;
 }
