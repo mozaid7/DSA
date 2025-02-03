@@ -427,3 +427,49 @@ Node* oddEven(Node* head) {
     odd->next = evenHead;
     return head;
 }
+
+// Merging two Sorted LL
+Node* mergeLL(Node* list1, Node* list2){
+    Node* t1 = list1;
+    Node* t2 = list2;
+    Node* dNode = new Node(-1);
+    Node* temp = dNode;
+    while(t1 != NULL && t2 != NULL){
+        if(t1->data < t2->data){
+            temp->next = t1;
+            temp = t1;
+            t1 = t1->next;
+        } else {
+            temp->next = t2;
+            temp = t2;
+            t2 = t2->next;
+        }
+    }
+    if(t1) temp->next = t1;
+    else temp->next = t2;
+    return dNode->next;
+}
+
+// Sorting the LL (with MergeSort)
+Node* findMiddle(Node* head){ // finding middle with Tortoise & Hare method
+    Node* slow = head;
+    Node* fast = head->next;
+    while(fast != NULL && fast->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}
+
+Node* sortLL(Node* head){ // putting the middle in the MergeSort snippet for sorting.
+    if(head == NULL || head->next == NULL) return head;
+
+    Node* middle = findMiddle(head);
+    Node* left = head;
+    Node* right = middle->next;
+    middle->next = NULL;
+
+    left = sortLL(left);
+    right = sortLL(right);
+    return mergeLL(left, right); // merging two sorted LL code written above
+}
