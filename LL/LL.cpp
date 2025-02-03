@@ -413,3 +413,17 @@ bool isPalindrome(Node* head){
 }
 
 // Odd even linked list to be done
+Node* oddEven(Node* head) {
+    Node* odd = head;
+    Node* even = head->next;
+    Node* evenHead = head->next;
+    while(even != NULL && even->next != NULL){
+        odd->next = odd->next->next;
+        even->next = even->next->next;
+
+        odd = odd->next;
+        even = even->next;
+    }
+    odd->next = evenHead;
+    return head;
+}
