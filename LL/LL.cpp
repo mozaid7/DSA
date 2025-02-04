@@ -473,3 +473,21 @@ Node* sortLL(Node* head){ // putting the middle in the MergeSort snippet for sor
     right = sortLL(right);
     return mergeLL(left, right); // merging two sorted LL code written above
 }
+
+// Remove Nth node from the end
+Node* removeNth(Node* head, int k){
+    Node* slow = head;
+    Node* fast = head;
+    for(int i=0; i<k; i++){
+        fast = fast->next;
+    }
+    if(fast == NULL) return head->next;
+    while(fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next;
+    }
+    Node* delNode = slow->next;
+    slow->next = slow->next->next;
+    delete(delNode);
+    return head;
+}
