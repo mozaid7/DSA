@@ -506,3 +506,31 @@ Node* intersection(Node* head1, Node* head2){
     }
     return t1;
 }
+
+// Choosing common elements in two LL & creating a new LL from them in Asc. Order
+Node* intersect_ll(Node* L1, Node *L2){
+    Node* head = NULL;
+    Node* tail = NULL;
+    while(L1 != NULL && L2 != NULL){
+        if(L1->data == L2->data){
+            Node* newNode = new Node(L1->data);
+            if(head == NULL){
+                head = newNode;
+                tail = newNode;
+            }
+            else {
+                tail->next = newNode;
+                tail = newNode;
+            }
+            L1 = L1->next;
+            L2 = L2->next;
+        }
+        else if(L1->data < L2->data) {
+            L1 = L1->next;
+        }
+        else {
+            L2 = L2->next;
+        }
+    }
+    return head;
+}
