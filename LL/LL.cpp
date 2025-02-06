@@ -534,3 +534,19 @@ Node* intersect_ll(Node* L1, Node *L2){
     }
     return head;
 }
+
+// Delete the Middle of a LL
+Node* deleteMid(Node* head){
+    if(head == NULL || head->next == NULL) return NULL;
+    Node* slow = head;
+    Node* fast = head;
+    fast = fast->next->next; // this will place the slow pointer one step behind the fast pointer
+    while(fast != NULL && fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    Node* middle = slow->next;
+    slow->next = slow->next->next;
+    delete(middle);
+    return head;
+}
