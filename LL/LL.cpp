@@ -600,3 +600,5 @@ Node* addTwo(Node* head1, Node* head2){
     }
     return dummyNode->next;
 }
+
+// new code to be written 
