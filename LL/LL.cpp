@@ -662,4 +662,51 @@ Node* flatten(Node* head){
     return head;
 }
 
-// To be continued. More questions.
+// Reverse LL in groups of K
+Node* reverseLinkedList(Node *head){
+   Node* temp = head;  
+   Node* prev = NULL;  
+   while(temp != NULL){  
+       Node* front = temp->next;  
+       temp->next = prev;  
+       prev = temp;  
+       temp = front; 
+   }
+   return prev;  
+}
+
+// Function to get the Kth node from
+Node* getKthNode(Node* temp, int k){
+    k -= 1; 
+    while(temp != NULL && k > 0){
+        k--; 
+        temp = temp -> next; 
+    }
+    return temp; 
+}
+
+// Function to reverse nodes in groups of K
+Node* kReverse(Node* head, int k){
+    Node* temp = head; 
+    Node* prevLast = NULL; 
+    while(temp != NULL){
+        Node* kThNode = getKthNode(temp, k); 
+        if(kThNode == NULL){
+            if(prevLast){
+                prevLast -> next = temp; 
+            }
+            break; 
+        }
+        Node* nextNode = kThNode -> next; 
+        kThNode -> next = NULL; 
+        reverseLinkedList(temp); 
+        if(temp == head){
+            head = kThNode;
+        }else{
+            prevLast -> next = kThNode; 
+        }
+        prevLast = temp; 
+        temp = nextNode; 
+    }
+    return head; 
+}
