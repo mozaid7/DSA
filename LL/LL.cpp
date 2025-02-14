@@ -677,9 +677,9 @@ Node* reverseLinkedList(Node *head){
 
 // Function to get the Kth node from
 Node* getKthNode(Node* temp, int k){
-    k -= 1; 
-    while(temp != NULL && k > 0){
-        k--; 
+    int cnt = 1; 
+    while(temp != NULL && cnt < k){
+        cnt++; 
         temp = temp -> next; 
     }
     return temp; 
