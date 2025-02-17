@@ -42,3 +42,8 @@ void bitManipulation(int num, int i) {
         num = num & ~(1 << (i - 1));
         cout << num;
     }
+    
+    // if the no is power of two or not
+    bool isPowerOfTwo(int n) {
+        return n > 0 && (n & (n - 1)) == 0;
+    }
