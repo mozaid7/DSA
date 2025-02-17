@@ -47,3 +47,11 @@ void bitManipulation(int num, int i) {
     bool isPowerOfTwo(int n) {
         return n > 0 && (n & (n - 1)) == 0;
     }
+
+    // swap two no. with the help of XOR
+    pair<int, int> get(int a, int b){
+        a = a^b;
+        b = a^b;
+        a = a^b;
+        return {a,b};
+    }
