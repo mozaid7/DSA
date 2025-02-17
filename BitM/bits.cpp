@@ -27,3 +27,18 @@ int convert2Decimal(string x){
     }
     return num;
 }
+
+// Get the iTH bit, set the iTH bit and clear the iTH bit.
+void bitManipulation(int num, int i) {
+        if ((num & (1 << (i - 1))) == 0) {
+            cout << 0 << " ";
+        } else {
+            cout << 1 << " ";
+        }
+        
+        num = num | (1 << (i - 1));
+        cout << num << " ";
+        
+        num = num & ~(1 << (i - 1));
+        cout << num;
+    }
