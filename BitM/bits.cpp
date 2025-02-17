@@ -41,17 +41,17 @@ void bitManipulation(int num, int i) {
         
         num = num & ~(1 << (i - 1));
         cout << num;
-    }
+}
     
-    // if the no is power of two or not
-    bool isPowerOfTwo(int n) {
-        return n > 0 && (n & (n - 1)) == 0;
-    }
+// if the no is power of two or not
+bool isPowerOfTwo(int n) {
+    return n > 0 && (n & (n - 1)) == 0;
+}
 
-    // swap two no. with the help of XOR
-    pair<int, int> get(int a, int b){
-        a = a^b;
-        b = a^b;
-        a = a^b;
-        return {a,b};
-    }
+// swap two no. with the help of XOR
+pair<int, int> get(int a, int b){
+    a = a^b;
+    b = a^b;
+    a = a^b;
+    return {a,b};
+}
