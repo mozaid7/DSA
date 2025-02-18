@@ -55,3 +55,37 @@ pair<int, int> get(int a, int b){
     a = a^b;
     return {a,b};
 }
+
+// count the no of set bits;
+int countBits(int n){
+    int cnt = 0;
+    while(n > 1){
+        if (n & 1) cnt += 1;
+        n = n >> 1;
+    }
+    if (n == 1) cnt += 1;
+    return cnt;
+}
+
+// Minimum flips to convert a no
+int minBitFlips(int start, int goal) {
+    int ans = start ^ goal;
+    int cnt = 0;
+    for(int i =0; i<31; i++){
+        if(ans & (1 << i)){
+            cnt = cnt + 1;
+        }
+    }
+    return cnt;
+}
+
+// number that comes once in an array
+// a^a = 0 ; arr={4,1,2,1,2}; 4^1^2^1^2 = 4; because 1 and 2 will get cancelled out by each others pair; 1^1 = 0; 2^2=0; 
+// 4 ^ 0 ^ 0 = 4
+int singleNumber(vector<int>& nums) {
+    int xorr = 0;
+    for(int i=0; i<nums.size(); i++) {
+        xorr = xorr ^ nums[i];
+    }
+    return xorr;
+}
