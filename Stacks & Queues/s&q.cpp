@@ -28,3 +28,28 @@ class MyStack {
             return st.empty();
         }
 };
+
+// GetMin function in Stack
+class MyStack{
+private:
+    stack<pair<int,int>> st;
+public:
+    MyStack(){}
+
+    void push(int val){
+        if(st.empty()){
+            st.push({val,val});
+        } else {
+            st.push({val, min(val, st.top().second)});
+        }
+    }
+
+    int getMin(){
+        return st.top().second;
+    }
+
+    int top() {
+        return st.top().first;
+    }
+
+};
