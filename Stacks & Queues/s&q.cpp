@@ -53,3 +53,19 @@ public:
     }
 
 };
+
+// Next Greater Element
+list<int> findNGE(vector<int> &arr){
+    int n = arr.size();
+    vector<int> nge(n,-1);
+    stack<int> st;
+    for(int i = n-1; i >= 0; i--){
+        while(!st.empty() && st.top() <= arr[i]){
+            st.pop();
+        }
+        if(!st.empty()) nge[i] = st.top();
+        else nge[i] = -1;
+        st.push(arr[i]);
+    }
+    //return nge;
+}
