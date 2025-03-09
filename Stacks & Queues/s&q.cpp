@@ -54,7 +54,7 @@ public:
 
 };
 
-// Next Greater Element
+// Next Greater Element-I
 list<int> findNGE(vector<int> &arr){
     int n = arr.size();
     vector<int> nge(n,-1);
@@ -66,6 +66,23 @@ list<int> findNGE(vector<int> &arr){
         if(!st.empty()) nge[i] = st.top();
         else nge[i] = -1;
         st.push(arr[i]);
+    }
+    //return nge;
+}
+
+// Next Greater Element-II
+list<int> findNGE(vector<int> &arr){
+    int n = arr.size();
+    vector<int> nge(n,-1);
+    stack<int> st;
+    for(int i = 2*n-1; i >= 0; i--){
+        while(!st.empty() && st.top() <= arr[i%n]){  // arr[i%n] -> original element from the array rather then doubled one
+            st.pop();
+        }
+        if(i<n){
+            nge[i] = st.empty()? -1 : st.top();
+        }
+        st.push(arr[i%n]);
     }
     //return nge;
 }
