@@ -88,25 +88,27 @@ list<int> findNGE(vector<int> &arr){
 }
 
 // Trapping Rainwater
-int findTotal(vector<int> &arr){
+int trapWater(vector<int>& arr) {
     int n = arr.size();
-    int lMax, rMax, total = 0;
-    int l = arr[0]; int r = arr[n - 1];
-    while(l < r){
-        if(arr[l] <= arr[r]){
-            if(lMax > arr[l]) {
-                total += lMax - arr[l];
-            } else {
-                lMax = arr[l];
-            }
-            l = l+1;
+    if (n == 0) return 0;
+
+    int l = 0, r = n - 1;
+    int lMax = arr[l], rMax = arr[r]; 
+    int total = 0;
+
+    while (l < r) {
+        if (arr[l] <= arr[r]) {
+            if (arr[l] < lMax) {
+                total += lMax - arr[l]; 
+            } 
+            lMax = max(lMax, arr[l]);
+            l++;  
         } else {
-            if(rMax > arr[r]){
-                total += rMax - arr[r];
-            } else {
-                rMax = arr[r];
+            if (arr[r] < rMax) {
+                total += rMax - arr[r];  
             }
-            r = r - 1;
+            rMax = max(rMax, arr[r]);  
+            r--;  
         }
     }
     return total;
