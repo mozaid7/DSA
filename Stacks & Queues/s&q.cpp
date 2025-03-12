@@ -114,4 +114,81 @@ int trapWater(vector<int>& arr) {
     return total;
 }
 
-// comment
+//Sum of Subarray Minimums //Hard to understand
+class Solution {
+    public:
+        vector<int> NextSmaller(const vector<int>& arr){
+            int n = arr.size();
+            vector<int> nextSmall(n);
+            stack<int> stk;
+            for (int i = n - 1; i >= 0; i-- ) {
+                while (!stk.empty() && arr[i] <= arr[stk.top()]) {
+                    stk.pop(); // Remove processed element              
+                }
+                nextSmall[i] = stk.empty() ? n: stk.top();
+                stk.push(i);
+            }
+        return nextSmall;
+        }
+        vector<int> PrevSmaller(const vector<int>& arr){
+            int n = arr.size();
+            vector<int> prevSmall(n);
+            stack<int> stk;
+            for (int i = 0; i < n ; i++) {
+                while (!stk.empty() && arr[i] < arr[stk.top()]) {
+                    stk.pop(); // Remove processed element
+                }
+                prevSmall[i]=stk.empty() ? -1 : stk.top();
+                stk.push(i);
+            }
+        return prevSmall;
+        }
+        int sumSubarrayMins(vector<int>& arr) {
+            vector<int> pse = PrevSmaller(arr);
+            vector<int> nse = NextSmaller(arr);
+            int total=0, mod = (int)(1e9 + 7);
+            for(int i=0;i<arr.size();i++){
+                int left = i-pse[i];
+                int right = nse[i]-i;
+                total=(total+(left * right * 1LL * arr[i]) % mod) % mod;
+            }
+            return total;
+        }
+};
+
+// Sum of Subarray Ranges
+long long subArrayRanges(vector<int>& A) {
+    long long res = 0;
+    for (int i = 0; i < A.size(); i++) {
+        int largest = A[i], smallest = A[i];
+        for (int j = i; j < A.size(); j++) {
+            largest = max(largest, A[j]);
+            smallest = min(smallest, A[j]);
+            res += largest - smallest;
+        }
+    }
+    return res;
+}
+
+// Asteroid Collision
+list<int> asteroid(vector<int> &arr){
+    list<int> st;
+    int n = arr.size();
+    for(int i = 0; i < n; i++){
+        if(arr[i] > 0) st.push_back(arr[i]);
+        else {
+            while(!st.empty() && st.back() > 0 && st.back() < abs(arr[i])){
+                st.pop_back();
+            }
+            if(!st.empty() && st.back() == abs(arr[i])){
+                st.pop_back();
+            }
+            else {
+                if(st.empty() || st.back() < 0){
+                    st.push_back(arr[i]);
+                }
+            }
+        }
+    }
+    return st;
+};
