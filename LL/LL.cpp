@@ -389,7 +389,7 @@ int lengthOfLoop(Node* head){
     return 0;
 }
 
-// LL is palindrome or not
+// LL is palindrome or not. I prefer the brute force solution
 bool isPalindrome(Node* head){
     Node* slow = head;
     Node* fast = head;
