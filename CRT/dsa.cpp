@@ -125,9 +125,6 @@ int climbStairs(int n) {
     return ways;
 }
 
-// #35 #121 #11 #167 #283 #125 #1137 #746
-
-
 // Maximum Sub-Array Sum -- Brute Force
 int maxSubArray(vector<int>& nums){
     int n = nums.size();
@@ -160,3 +157,81 @@ int maxSubArray(vector<int>& nums) {
     }
     return maxi;
 }
+
+// Container with Most Water #11
+int maxArea(vector<int>& height) {
+    int n = height.size();
+    int left = 0;
+    int right = n - 1;
+    int maxArea = 0;
+    while(left < right){
+        int currArea = min(height[left], height[right]) * (right -left);
+        if(currArea > maxArea) maxArea = currArea;
+
+        if(height[left] < height[right]){
+            left++;
+        } else {
+            right--;
+        }
+    }
+    return maxArea;
+}
+
+// Move zeroes to the end
+vector<int> moveZeroes(vector<int>& nums) {
+    int n = nums.size();
+    int j = -1;
+    for(int i=0; i<n; i++) {
+        if(nums[i] == 0) {
+            j = i;
+            break;
+        }
+    }
+    // no non zero numbers
+    if(j == -1) return nums;
+
+    for(int i = j+1; i<n; i++) {
+        if(nums[i] != 0) {
+            swap(nums[i],nums[j]);
+            j++;
+        }
+    }
+    return nums;
+}
+
+// Search insert position
+int searchInsert(vector<int>& arr, int x) {
+    int n = arr.size();
+    int low = 0, high = n - 1;
+    int ans = n;
+
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        // maybe an answer
+        if (arr[mid] >= x) {
+            ans = mid;
+            //look for smaller index on the left
+            high = mid - 1;
+        }
+        else {
+            low = mid + 1; // look on the right
+        }
+    }
+    return ans;
+}
+
+// 35 121 11 #167 283 #125 #1137 #746
+
+// Buy and Sell Stock
+int maxProfit(vector<int>& prices) {
+    int mini = prices[0];
+    int maxProfit = 0;
+    int n = prices.size();
+    for(int i = 1; i<n; i++) {
+        int cost = prices[i] - mini;
+        maxProfit = max(maxProfit, cost);
+        mini = min(mini, prices[i]);
+    }
+    return maxProfit;
+}
+
