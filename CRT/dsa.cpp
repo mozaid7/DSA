@@ -78,3 +78,85 @@ vector<int> twoSum(vector<int>& nums, int target) {
     }
     return{-1,-1};
 }
+
+// 3 Sum is to be done in HomeWork
+
+
+// Fibonacci Number
+void Fibonacci(int num) {
+    int a = 0, b = 1;
+    for(int i = 0; i < num; i++) {
+        cout<< a << " ";
+        int next = a + b;
+        a = b;
+        b = next;
+    }
+}
+
+// By Recursion
+int fib(int n){
+    if(n == 0 || n == 1) return n;
+    return fib(n-1) + fib(n-2);
+}
+
+// By using DP -- Important -- Less Time Complexity
+int Fibo(int n) {
+    int dp[31] = {0};
+    if(dp[n] != 0) return dp[n];
+    if(n == 0 || n == 1) return n;
+    int curr = Fibo(n-1) + Fibo(n-2);
+    dp[n] = curr;
+    return curr;
+}
+
+// Factorial
+int Fact(int n){
+    if(n == 1) return 1;
+    return n * Fact(n-1);
+}
+
+// Climbing Stairs
+int dp[46] = {0};
+int climbStairs(int n) {
+    if(dp[n] != 0) return dp[n];
+    if(n == 1 || n == 2) return n;
+    int ways = climbStairs(n-1) + climbStairs(n-2);
+    dp[n] = ways;
+    return ways;
+}
+
+// #35 #121 #11 #167 #283 #125 #1137 #746
+
+
+// Maximum Sub-Array Sum -- Brute Force
+int maxSubArray(vector<int>& nums){
+    int n = nums.size();
+    int sum = INT_MIN;
+    for(int i=0; i<n; i++){
+        int temp = 0;
+        for(int j=i; j<n; j++){
+            temp += nums[j];
+        } 
+        if(temp > sum){
+            sum = temp;
+        }
+    }
+    return sum;
+}
+
+// Optimized Solution -- KADANE'S ALGO
+int maxSubArray(vector<int>& nums) {
+    int n =nums.size();
+    long long sum = 0, maxi = LONG_MIN;
+    for(int i = 0; i<n; i++) {
+        sum += nums[i];
+
+        if(sum > maxi) {
+            maxi = sum;
+        }
+        if(sum < 0) {
+            sum = 0;
+        }
+    }
+    return maxi;
+}
