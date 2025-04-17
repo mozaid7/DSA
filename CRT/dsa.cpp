@@ -220,7 +220,7 @@ int searchInsert(vector<int>& arr, int x) {
     return ans;
 }
 
-// 35 121 11 #167 283 #125 #1137 #746
+// 35 121 11 #167 283 125 1137 #746
 
 // Buy and Sell Stock
 int maxProfit(vector<int>& prices) {
@@ -235,3 +235,47 @@ int maxProfit(vector<int>& prices) {
     return maxProfit;
 }
 
+// Valid Palindrome
+bool isPalindrome(string s) {
+    string pal = "";
+    for (char i : s) {
+        i = tolower(i);
+        if (isalpha(i) || isdigit(i)) pal.push_back(i);
+    }
+
+    int n = pal.size(), left = 0, right = n - 1;
+    if (n == 0 || n == 1) return true;
+    while (left <= right) {
+        if (pal[left] == pal[right]) {
+            left++;
+            right--;
+        } else return false;
+    }
+    return true;
+}
+
+// Tribonacci
+int tribonacci(int n) {
+    if(n == 0 || n == 1 || n == 1) return n;
+    int dp[n+1];
+
+    dp[0] = 0;
+    dp[1] = 1;
+    dp[2] = 1;
+    
+    for(int i = 3; i<= n; i++){
+        dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
+    }
+    
+    return dp[n];
+}
+
+// Rotate an Array
+void rotate(vector<int>& nums, int k) {
+    int n = nums.size();
+    k = k % n;
+    reverse(nums.begin(), nums.end());
+    reverse(nums.begin(), nums.begin() + k);
+    reverse(nums.begin() + k, nums.end());
+    
+}
