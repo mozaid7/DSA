@@ -89,4 +89,38 @@ int mostFrequentEven(vector<int>& nums) {
 
 
 // LINKED LIST -- STARTING FROM HERE
+class Node {
+    public:
+    int data;
+    Node* next;
 
+    public:
+    Node(int data1, Node* next1){
+        data = data1;
+        next = next1;
+    }
+
+    public:
+    Node(int data1){
+        data = data1;
+        next = nullptr;
+    }
+};
+
+// Delete the middle of the Linked List
+Node* deleteMid(Node* head) {
+    if(head == NULL || head->next == NULL) return NULL;
+    
+    Node* slow = head;
+    Node* fast = head;
+    Node* prev = NULL;
+    
+    while(fast != NULL && fast->next != NULL){
+        fast = fast->next->next;
+        prev = slow;
+        slow = slow->next;
+        
+    }
+    prev->next = slow->next;
+    return head;
+}
