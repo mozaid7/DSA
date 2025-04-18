@@ -192,6 +192,29 @@ vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
     return ans;
 }
 
+// Intersection of two Un-sorted Arrays with Duplicates
+vector<int> intersection(vector<int> &arr1, vector<int> &arr2) {
+    vector<int> ans;
+    int n = arr1.size();
+    int m = arr2.size();
+    int i=0, j=0;
+    while(i<n && j<m){
+        if(arr1[i] < arr2[j]){
+            i++;
+        }
+        else if(arr1[i] > arr2[j]){
+            j++;
+        } else {
+            if(ans.size() == 0 || ans.back() != arr1[i]){  // last element of vector ans is ans.back()
+                ans.push_back(arr1[i]);
+            }
+            i++;
+            j++;
+        }
+    }
+    return ans;
+}
+
 // Missing Number
 int missingNumber(vector<int>& nums) {
     int n = nums.size();

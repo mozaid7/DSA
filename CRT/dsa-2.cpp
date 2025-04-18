@@ -86,3 +86,7 @@ int mostFrequentEven(vector<int>& nums) {
 
     return result;
 }
+
+
+// LINKED LIST -- STARTING FROM HERE
+
