@@ -66,3 +66,42 @@ vector<int> xorQueries(vector<int>& arr, vector<vector<int>>& queries) {
         return ans;
 
     }
+
+// Starting with a 1-indexed array of zeros and a list of operations, for each operation add a value to each array element between two given indices, inclusive. Once all operations have been performed, return the maximum value in the array.
+long arrayManipulation(int n, vector<vector<int>> queries) {
+    vector<long> arr(n + 2, 0);
+
+    for (const auto& q : queries) {
+        int a = q[0];
+        int b = q[1];
+        int k = q[2];
+
+        arr[a] += k;
+        arr[b + 1] -= k;
+    }
+
+    long maxVal = 0, current = 0;
+    for (int i = 1; i <= n; i++) {
+        current += arr[i];
+        maxVal = max(maxVal, current);
+    }
+
+    return maxVal;
+}
+
+// There is a collection of input strings and a collection of query strings. For each query string, determine how many times it occurs in the list of input strings. Return an array of the results.
+vector<int> matchingStrings(vector<string> stringList, vector<string> queries) {
+    vector<int> ans;
+    int m = stringList.size();
+    int n = queries.size();
+    for(int i=0; i<n; i++){
+        int cnt = 0;
+        for(int j=0; j<m; j++){
+            if(queries[i] == stringList[j]){
+                cnt++;
+            }
+        }
+        ans.push_back(cnt);
+    }
+    return ans;
+}
