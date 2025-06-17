@@ -134,3 +134,83 @@ int sumRegion(int row1, int col1, int row2, int col2) {
     if(row1>0 && col1>0) ans += pre[row1-1][col1-1];
     return ans;
 }
+
+// Highest Value Palindrome
+string highestValuePalindrome(string s, int n, int k) {
+    vector<bool> changed(n, false);
+    int l = 0, r = n - 1;
+    int minChanges = 0;
+
+    
+    while (l < r) {
+        if (s[l] != s[r]) {
+            char maxChar = max(s[l], s[r]);
+            s[l] = s[r] = maxChar;
+            changed[l] = changed[r] = true;
+            k--;
+        }
+        l++;
+        r--;
+    }
+
+    if (k < 0) return "-1";
+
+    l = 0;
+    r = n - 1;
+    while (l <= r) {
+        if (l == r) {
+            if (k > 0 && s[l] != '9') {
+                s[l] = '9';
+                k--;
+            }
+        } else {
+            if (s[l] != '9') {
+                if (changed[l] || changed[r]) {
+                    if (k >= 1) {
+                        s[l] = s[r] = '9';
+                        k--;
+                    }
+                } else {
+                    if (k >= 2) {
+                        s[l] = s[r] = '9';
+                        k -= 2;
+                    }
+                }
+            }
+        }
+        l++;
+        r--;
+    }
+
+    return s;
+}
+
+// Sherlock and Valid String
+string isValid(string s) {
+    unordered_map<char, int> freq;
+
+    for (char c : s) {
+        freq[c]++;
+    }
+
+    unordered_map<int, int> freqCount;
+    for (auto pair : freq) {
+        freqCount[pair.second]++;
+    }
+
+    if (freqCount.size() == 1) {
+        return "YES";
+    } else if (freqCount.size() == 2) {
+        auto it = freqCount.begin();
+        int f1 = it->first, c1 = it->second;
+        it++;
+        int f2 = it->first, c2 = it->second;
+
+        if ((c1 == 1 && (f1 - 1 == f2 || f1 == 1)) ||
+            (c2 == 1 && (f2 - 1 == f1 || f2 == 1))) {
+            return "YES";
+        }
+    }
+
+    return "NO";
+}
