@@ -214,3 +214,83 @@ string isValid(string s) {
 
     return "NO";
 }
+
+// Trapping Rain Water
+int trap(vector<int>& height) {
+    int n = height.size();
+    if(n==0) return 0;
+
+    int l = 0; int r = n-1;
+    int lmax = height[l], rMax = height[r];
+    int total = 0;
+
+    while(l < r){
+        if(height[l] <= height[r]){
+            if(height[l] < lmax){
+                total += lmax - height[l];
+            }
+            lmax = max(lmax, height[l]);
+            l++;
+        } else {
+            if(height[r] < rMax){
+                total += rMax - height[r];
+            }
+            rMax = max(rMax, height[r]);
+            r--;
+        }
+    }
+    return total;
+};
+
+// 1446. Consecutive Characters
+int maxPower(string s) {
+    int n = s.size();
+    int cnt = 1;
+    int maxCount = 0;
+
+    for(int i=1; i<=n; i++){
+        if(s[i] == s[i-1]){
+            cnt++;
+        } else {
+            maxCount = max(cnt,maxCount);
+            cnt = 1;
+        }
+    }
+    return maxCount;
+}
+
+// Group Anagrams
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    unordered_map<string, vector<string>> mp;
+    
+    for(auto str : strs){
+        string word = str;
+        sort(word.begin(), word.end());
+        mp[word].push_back(str);
+    }
+
+    vector<vector<string>> ans;
+    for(auto x: mp){
+        ans.push_back(x.second);
+    }
+    return ans;
+}
+
+// Longest Substring Without Repeating Characters
+int lengthOfLongestSubstring(string s) {
+    int left = 0;
+    int maxLength = 0;
+    unordered_set<char> charSet;
+
+    for (int right = 0; right < s.length(); right++) {
+        while (charSet.find(s[right]) != charSet.end()) {
+            charSet.erase(s[left]);
+            left++;
+        }
+
+        charSet.insert(s[right]);
+        maxLength = max(maxLength, right - left + 1);
+    }
+
+    return maxLength; 
+}
