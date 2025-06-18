@@ -294,3 +294,66 @@ int lengthOfLongestSubstring(string s) {
 
     return maxLength; 
 }
+
+// There is a string, , of lowercase English letters that is repeated infinitely many times. Given an integer, , find and print the number of letter a's in the first  letters of the infinite string.
+long repeatedString(string s, long n) {
+    long long cnt_a = 0;
+    
+    for(char ch: s){
+        if(ch == 'a') cnt_a++;
+    }
+    
+    long long full_repeats = n / s.length();
+    long long remainder = n % s.length();
+    
+    long long cnt_rem = 0;
+    for(int i=0; i<remainder; i++){
+        if(s[i] == 'a') cnt_rem++;
+    }
+    
+    return full_repeats * cnt_a + cnt_rem;
+}
+
+
+// Sean invented a game involving a 2n*2n matrix where each cell of the matrix contains an integer. He can reverse any of its rows or columns any number of times. The goal of the game is to maximize the sum of the elements in the n*n submatrix located in the upper-left quadrant of the matrix.
+int flippingMatrix(vector<vector<int>> matrix) {
+    int n = matrix.size() / 2;
+    int sum = 0;
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            int a = matrix[i][j];
+            int b = matrix[i][2*n - 1 - j];
+            int c = matrix[2*n - 1 - i][j];
+            int d = matrix[2*n - 1 - i][2*n - 1 - j];
+            sum += max({a, b, c, d});
+        }
+    }
+
+    return sum;
+}
+
+// Two strings are anagrams of each other if the letters of one string can be rearranged to form the other string. Given a string, find the number of pairs of substrings of the string that are anagrams of each other.
+int sherlockAndAnagrams(string s) {
+    unordered_map<string, int> substrFreq;
+    int n = s.length();
+
+    for (int i = 0; i < n; ++i) {
+        string substr = "";
+        for (int j = i; j < n; ++j) {
+            substr += s[j];
+            string sorted_substr = substr;
+            sort(sorted_substr.begin(), sorted_substr.end());
+            substrFreq[sorted_substr]++;
+        }
+    }
+
+    int count = 0;
+    for (auto& p : substrFreq) {
+        int freq = p.second;
+        count += (freq * (freq - 1)) / 2;
+    }
+
+    return count;
+
+}
