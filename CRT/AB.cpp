@@ -443,3 +443,55 @@ vector<vector<int>> fourSum(vector<int>& nums, int target) {
 
     return ans;
 }
+
+// There are a number of people who will be attending ACM-ICPC World Finals. Each of them may be well versed in a number of topics. Given a list of topics known by each attendee, presented as binary strings, determine the maximum number of topics a 2-person team can know. Each subject has a column in the binary string, and a '1' means the subject is known while '0' means it is not. Also determine the number of teams that know the maximum number of topics. Return an integer array with two elements. The first is the maximum number of topics known, and the second is the number of teams that know that number of topics.
+vector<int> acmTeam(const vector<string>& topics) {
+    int maxTopics = 0;
+    int teamCount = 0;
+    int n = topics.size();
+    int m = topics[0].size(); // Number of topics
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = i + 1; j < n; ++j) {
+            int topicsKnown = 0;
+            for (int k = 0; k < m; ++k) {
+                if (topics[i][k] == '1' || topics[j][k] == '1') {
+                    topicsKnown++;
+                }
+            }
+
+            if (topicsKnown > maxTopics) {
+                maxTopics = topicsKnown;
+                teamCount = 1;
+            } else if (topicsKnown == maxTopics) {
+                teamCount++;
+            }
+        }
+    }
+
+    return {maxTopics, teamCount};
+}
+
+// Alice is a kindergarten teacher. She wants to give some candies to the children in her class.  All the children sit in a line and each of them has a rating score according to his or her performance in the class.  Alice wants to give at least 1 candy to each child. If two children sit next to each other, then the one with the higher rating must get more candies. Alice wants to minimize the total number of candies she must buy.
+long candies(int n, vector<int> arr) {
+    vector<int> candy(n, 1);
+
+    for (int i = 1; i < n; ++i) {
+        if (arr[i] > arr[i - 1]) {
+            candy[i] = candy[i - 1] + 1;
+        }
+    }
+
+    for (int i = n - 2; i >= 0; --i) {
+        if (arr[i] > arr[i + 1]) {
+            candy[i] = max(candy[i], candy[i + 1] + 1);
+        }
+    }
+
+    long totalCandies = 0;
+    for (int i = 0; i < n; ++i) {
+        totalCandies += candy[i];
+    }
+
+    return totalCandies;
+}
