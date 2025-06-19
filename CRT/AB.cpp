@@ -357,3 +357,89 @@ int sherlockAndAnagrams(string s) {
     return count;
 
 }
+
+// 151. Reverse Words in a String
+string reverseWords(string s) {
+    int n = s.size();
+    string temp = "";
+    vector<string> res;
+    for (int i = 0; i < n; i++) {
+        if (s[i] != ' ') {
+            temp += s[i];
+        } else {
+            if (!temp.empty()) {
+                res.push_back(temp);
+                temp = "";
+            }
+        }
+    }
+
+    if (!temp.empty()) {
+        res.push_back(temp);
+    }
+    
+    reverse(res.begin(), res.end());
+    string result = "";
+    for (int i = 0; i < res.size(); i++) {
+        result += res[i];
+        if (i < res.size() - 1) result += ' ';
+    }
+
+    return result;
+}
+
+// Valid Palindrome Without extra space
+bool isPalindrome(string s) {
+    int left = 0;
+    int right = s.length() - 1;
+
+    while (left < right) {
+        while (left < right && !isalnum(s[left])) left++;
+        while (left < right && !isalnum(s[right])) right--;
+
+        if (tolower(s[left]) != tolower(s[right])) return false;
+
+        left++;
+        right--;
+    }
+
+    return true;
+}
+
+
+// 4Sum
+vector<vector<int>> fourSum(vector<int>& nums, int target) {
+    int n = nums.size();
+    set<vector<int>> st;
+    vector<vector<int>> ans;
+
+    sort(nums.begin(), nums.end());
+
+    for (int i = 0; i < n - 3; i++) {
+        for (int j = i + 1; j < n - 2; j++) {
+            long long newTarget = (long long)target - (long long)(nums[i] + nums[j]);
+            int l = j + 1;
+            int r = n - 1;
+
+            while (l < r) {
+                long long sum = (long long)nums[l] + nums[r];
+
+                if (sum == newTarget) {
+                    st.insert({nums[i], nums[j], nums[l], nums[r]});
+                    l++;
+                    r--;
+                } else if (sum < newTarget) {
+                    l++;
+                } else {
+                    r--;
+                }
+            }
+        }
+    }
+
+    for (auto &quad : st) {
+        ans.push_back(quad);
+    }
+
+    return ans;
+}
