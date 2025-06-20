@@ -539,3 +539,75 @@ int subarraySum(vector<int>& nums, int k) {
     }
     return cnt;
 }
+
+// 523 Continuous subarray sum
+bool checkSubarraySum(vector<int>& nums, int k) {
+    unordered_map<int,int>mp;
+    mp[0]=-1;
+    int sum=0;
+    for(int i=0;i<nums.size();i++){
+        sum+=nums[i];
+        if(mp.find(sum%k)!=mp.end()){
+            if(i-mp[sum%k]>=2)
+                return true;
+        }
+        else
+            mp[sum%k]=i;
+    }
+    return false;
+}
+
+// Encryption - An English text needs to be encrypted using the following encryption scheme.First, the spaces are removed from the text. Let  be the length of this text. Then, characters are written into a grid, whose rows and columns have the following constraints:
+string encryption(string s) {
+    string clean = "";
+    for (char c : s) {
+        if (c != ' ')
+            clean += c;
+    }
+
+    int L = clean.size();
+    int row = floor(sqrt(L));
+    int col = ceil(sqrt(L));
+    if (row * col < L) row++;
+
+    vector<string> grid(row);
+    for (int i = 0; i < L; i++) {
+        grid[i / col] += clean[i];
+    }
+
+    string result = "";
+    for (int c = 0; c < col; c++) {
+        for (int r = 0; r < row; r++) {
+            if (c < grid[r].size())
+                result += grid[r][c];
+        }
+        result += ' ';
+    }
+
+    return result;
+}
+
+// Lexicographical order is often known as alphabetical order when dealing with strings. A string is greater than another string if it comes later in a lexicographically sorted list.Given a word, create a new word by swapping some or all of its characters. This new word must meet two criteria: 1)It must be greater than the original word. 2)It must be the smallest word that meets the first condition
+string biggerIsGreater(string w) {
+    int n = w.length();
+    
+    int i = n - 2;
+    while (i >= 0 && w[i] >= w[i + 1]) {
+        i--;
+    }
+
+    if (i < 0) {
+        return "no answer";
+    }
+
+    int j = n - 1;
+    while (w[j] <= w[i]) {
+        j--;
+    }
+
+    swap(w[i], w[j]);
+
+    reverse(w.begin() + i + 1, w.end());
+
+    return w;
+}
