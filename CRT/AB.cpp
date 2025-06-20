@@ -495,3 +495,47 @@ long candies(int n, vector<int> arr) {
 
     return totalCandies;
 }
+
+// CORPORATE BOOKINGS -- Array Manipulation IMP
+vector<int> corpFlightBookings(vector<vector<int>>& bookings, int n) {
+    vector<int> ans(n,0);
+
+    for(vector<int> ch: bookings){
+        int s = ch[0];
+        int e = ch[1];
+        int seats = ch[2];
+
+        ans[s - 1] += seats;
+        if(e != n) ans[e] -= seats;
+    }
+    for(int i=1; i<n; i++){
+        ans[i] += ans[i - 1];
+    }
+    return ans;
+}
+
+// Bulb Switcher Small but IMP
+int bulbSwitch(int n) {
+    long long i=1;
+    int cnt=0;
+    while((i*i)<=n){
+        i++;
+        cnt++;
+    }
+    return cnt;
+}
+
+// 560 Subarray Sum equals K
+int subarraySum(vector<int>& nums, int k) {
+    int n = nums.size();
+    map<int, int>mpp;
+    mpp[0] = 1;
+    int preSum = 0; int cnt = 0;
+    for(int i=0; i<n; i++) {
+        preSum += nums[i];
+        int rem = preSum - k;
+        cnt += mpp[rem];
+        mpp[preSum] += 1;
+    }
+    return cnt;
+}
