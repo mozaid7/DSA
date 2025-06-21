@@ -239,3 +239,65 @@ string biggerIsGreater(string w) {
 
     return w;
 }
+
+// Kangaroo Jumps - Number Line Jumps
+string kangaroo(int x1, int v1, int x2, int v2) {
+    if (v1 == v2) {
+        return (x1 == x2) ? "YES" : "NO";
+    }
+
+    if ((x2 - x1) % (v1 - v2) == 0 && ((v1 > v2 && x1 < x2) || (v2 > v1 && x2 < x1))) {
+        return "YES";
+    }
+
+    return "NO";
+}
+
+// Hackerland is a one-dimensional city with houses aligned at integral locations along a road. The Mayor wants to install radio transmitters on the roofs of the city's houses. Each transmitter has a fixed range meaning it can transmit a signal to all houses within that number of units distance away.Given a map of Hackerland and the transmission range, determine the minimum number of transmitters so that every house is within range of at least one transmitter. Each transmitter must be installed on top of an existing house.
+int hackerlandRadioTransmitters(vector<int> x, int k) {
+    sort(x.begin(), x.end());
+
+    int n = x.size();
+    int i = 0, count = 0;
+
+    while (i < n) {
+        count++;
+
+        int loc = x[i] + k;
+        while (i < n && x[i] <= loc) i++;
+
+        int transmitter = x[i - 1];
+
+        loc = transmitter + k;
+        while (i < n && x[i] <= loc) i++;
+    }
+
+    return count;
+}
+
+// Poisonous Plants -There are a number of plants in a garden. Each of the plants has been treated with some amount of pesticide. After each day, if any plant has more pesticide than the plant on its left, being weaker than the left one, it dies.You are given the initial values of the pesticide in each of the plants. Determine the number of days after which no plant dies, i.e. the time after which there is no plant with more pesticide content than the plant to its left.
+int poisonousPlants(vector<int> p) {
+    int n = p.size();
+    stack<pair<int, int>> st; // {pesticide, daysToDie}
+    vector<int> days(n, 0);   // stores days to die for each plant
+    int maxDays = 0;
+
+    for (int i = 0; i < n; ++i) {
+        int day = 0;
+
+        // Remove plants from the stack which have pesticide >= current
+        while (!st.empty() && p[i] <= st.top().first) {
+            day = max(day, st.top().second);
+            st.pop();
+        }
+
+        // If stack is not empty, plant will die
+        if (!st.empty()) day++;
+
+        // Update days and push this plant to the stack
+        st.push({p[i], day});
+        maxDays = max(maxDays, day);
+    }
+
+    return maxDays;
+}
