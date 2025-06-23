@@ -364,3 +364,72 @@ int aggressiveCows(vector<int> &stalls, int k)
     }
     return high;
 }
+
+// Split Array Largest Sum
+int countPartitions(vector<int> &nums, int maxSum) {
+    int n = nums.size(); //size of array.
+    int partitions = 1;
+    long long subarraySum = 0;
+    for (int i = 0; i < n; i++) {
+        if (subarraySum + nums[i] <= maxSum) {
+            //insert element to current subarray
+            subarraySum += nums[i];
+        }
+        else {
+            //insert element to next subarray
+            partitions++;
+            subarraySum = nums[i];
+        }
+    }
+    return partitions;
+}
+
+int splitArray(vector<int>& nums, int k) {
+    int low = *max_element(nums.begin(), nums.end());
+    int high = accumulate(nums.begin(), nums.end(), 0);
+    //Apply binary search:
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        int partitions = countPartitions(nums, mid);
+        if (partitions > k) {
+            low = mid + 1;
+        }
+        else {
+            high = mid - 1;
+        }
+    }
+    return low;
+}
+
+// Painter's Partition
+int countPainters(vector<int> &boards, int time) {
+    int n = boards.size();
+    int painters = 1;
+    long long boardsPainter = 0;
+    for (int i = 0; i < n; i++) {
+        if (boardsPainter + boards[i] <= time) {
+            boardsPainter += boards[i];
+        }
+        else {
+            painters++;
+            boardsPainter = boards[i];
+        }
+    }
+    return painters;
+}
+
+int findLargestMinDistance(vector<int> &boards, int k) {
+    int low = *max_element(boards.begin(), boards.end());
+    int high = accumulate(boards.begin(), boards.end(), 0);
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        int painters = countPainters(boards, mid);
+        if (painters > k) {
+            low = mid + 1;
+        }
+        else {
+            high = mid - 1;
+        }
+    }
+    return low;
+}
