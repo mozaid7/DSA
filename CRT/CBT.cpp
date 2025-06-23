@@ -301,3 +301,93 @@ int poisonousPlants(vector<int> p) {
 
     return maxDays;
 }
+
+// Largest Rectangle
+long largestRectangle(vector<int> h) {
+    int n = h.size();
+    vector<int> left(n), right(n);
+    stack<int> st;
+
+    for (int i = 0; i < n; ++i) {
+        while (!st.empty() && h[st.top()] >= h[i]) {
+            st.pop();
+        }
+        if (st.empty()) {
+            left[i] = -1; 
+        } else {
+            left[i] = st.top(); 
+        }
+        st.push(i);
+    }
+
+    while (!st.empty()) st.pop();
+
+    for (int i = n - 1; i >= 0; --i) {
+        while (!st.empty() && h[st.top()] >= h[i]) {
+            st.pop();
+        }
+        if (st.empty()) {
+            right[i] = n; 
+        } else {
+            right[i] = st.top(); 
+        }
+        st.push(i);
+    }
+
+    int maxArea = 0;
+    for (int i = 0; i < n; ++i) {
+        int width = right[i] - left[i] - 1;
+        int area = h[i] * width;
+        maxArea = max(maxArea, area);
+    }
+
+    return maxArea;
+}
+
+// Valid Parenthesis
+string isBalanced(string s) {
+    stack<char> st;
+    for (char c : s) {
+        if (c == '(' || c == '{' || c == '[') {
+            st.push(c);
+        } else {
+            if (st.empty()) return "NO";
+            char top = st.top();
+            if ((c == ')' && top == '(') ||
+                (c == ']' && top == '[') ||
+                (c == '}' && top == '{')) {
+                st.pop();
+            } else {
+                return "NO";
+            }
+        }
+    }
+    return st.empty() ? "YES" : "NO";
+}
+
+// Game of two stacks
+int twoStacks(int maxSum, vector<int> a, vector<int> b) {
+    int sum = 0, count = 0, i = 0, j = 0;
+
+    while (i < a.size() && sum + a[i] <= maxSum) {
+        sum += a[i];
+        i++;
+    }
+    count = i;
+
+    while (j < b.size() && i >= 0) {
+        sum += b[j];
+        j++;
+
+        while (sum > maxSum && i > 0) {
+            i--;
+            sum -= a[i];
+        }
+
+        if (sum <= maxSum) {
+            count = max(count, i + j);
+        }
+    }
+
+    return count;
+}
