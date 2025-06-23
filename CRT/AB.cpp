@@ -442,4 +442,181 @@ int minEatingSpeed(vector<int>& piles, int h) {
     return left;
 }
 
+// Next Greater Element
+vector<int> nextLargerElement(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> ans(n,-1);
+    stack<int>st;
+    for(int i=n-1; i>=0; i--){
+        while(!st.empty() && st.top() <= arr[i]){ // while (!st.empty() && st.top() >= arr[i]) --> for next smaller element
+            st.pop();
+        }
+        if(st.empty()){
+            st.push(arr[i]);
+            continue;
+        }
+        ans[i] = st.top();
+        st.push(arr[i]);
+    }
+    return ans;
+    
+}
 
+
+// Largest Rectangle in Histogram 
+vector<int> nextSmallerIndex(vector<int>& heights) {
+    int n = heights.size();
+    vector<int> ans(n, n);
+    stack<int> st;
+
+    for (int i = n - 1; i >= 0; i--) {
+        while (!st.empty() && heights[st.top()] >= heights[i]) {
+            st.pop();
+        }
+
+        if (!st.empty()) {
+            ans[i] = st.top();
+        }
+
+        st.push(i);
+    }
+
+    return ans;
+}
+
+vector<int> previousSmallerIndex(vector<int>& heights) {
+    int n = heights.size();
+    vector<int> ans(n, -1);
+    stack<int> st;
+
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && heights[st.top()] >= heights[i]) {
+            st.pop();
+        }
+
+        if (!st.empty()) {
+            ans[i] = st.top(); 
+        }
+
+        st.push(i);
+    }
+
+    return ans;
+}
+
+int largestRectangleArea(vector<int>& heights) {
+    int n = heights.size();
+    vector<int> left = previousSmallerIndex(heights);
+    vector<int> right = nextSmallerIndex(heights);
+
+    int maxArea = 0;
+
+    for (int i = 0; i < n; i++) {
+        int width = right[i] - left[i] - 1;
+        int area = heights[i] * width;
+        maxArea = max(maxArea, area);
+    }
+
+    return maxArea;
+}
+
+// Maximal Rectangle 
+vector<int> nextSmallerIndex(vector<int>& heights) {
+    int n = heights.size();
+    vector<int> ans(n, n);
+    stack<int> st;
+
+    for (int i = n - 1; i >= 0; i--) {
+        while (!st.empty() && heights[st.top()] >= heights[i]) {
+            st.pop();
+        }
+
+        if (!st.empty()) {
+            ans[i] = st.top();
+        }
+
+        st.push(i);
+    }
+
+    return ans;
+}
+
+vector<int> previousSmallerIndex(vector<int>& heights) {
+    int n = heights.size();
+    vector<int> ans(n, -1);
+    stack<int> st;
+
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && heights[st.top()] >= heights[i]) {
+            st.pop();
+        }
+
+        if (!st.empty()) {
+            ans[i] = st.top(); 
+        }
+
+        st.push(i);
+    }
+
+    return ans;
+}
+
+int largestRectangleArea(vector<int>& heights) {
+    int n = heights.size();
+    vector<int> left = previousSmallerIndex(heights);
+    vector<int> right = nextSmallerIndex(heights);
+
+    int maxArea = 0;
+
+    for (int i = 0; i < n; i++) {
+        int width = right[i] - left[i] - 1;
+        int area = heights[i] * width;
+        maxArea = max(maxArea, area);
+    }
+
+    return maxArea;
+}
+
+int maximalRectangle(vector<vector<char>>& matrix) {
+    if (matrix.empty()) return 0;
+
+    int m = matrix.size(), n = matrix[0].size();
+    vector<int> heights(n, 0);
+    int maxRectangle = 0;
+
+    for (int i = 0; i < m; i++) {
+        // Update heights: if '1' -> +1, if '0' -> reset to 0
+        for (int j = 0; j < n; j++) {
+            if (matrix[i][j] == '1')
+                heights[j]++;
+            else
+                heights[j] = 0;
+        }
+        maxRectangle = max(maxRectangle, largestRectangleArea(heights));
+    }
+
+    return maxRectangle;
+}
+
+// Number of Visible Person in a Queue
+vector<int> canSeePersonsCount(vector<int>& heights) {
+    int n = heights.size();
+    vector<int> ans(n, 0);
+    stack<int> st;
+
+    for (int i = n - 1; i >= 0; i--) {
+        while (!st.empty() && heights[i] > heights[st.top()]) {
+            ans[i]++;
+            st.pop();
+        }
+
+        if (!st.empty()) {
+            ans[i]++;
+        }
+
+        st.push(i);
+    }
+
+    return ans;
+}
+    
