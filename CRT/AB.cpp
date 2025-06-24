@@ -1,6 +1,14 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
 // 238. Product of Array Except Self
 vector<int> productExceptSelf(vector<int>& nums) {
     int n = nums.size();
@@ -619,4 +627,79 @@ vector<int> canSeePersonsCount(vector<int>& heights) {
 
     return ans;
 }
-    
+
+// Palindrome Linked List
+bool isPalindrome(ListNode* head) {
+    if (!head || !head->next) return true;
+
+    ListNode* slow = head;
+    ListNode* fast = head;
+    ListNode* prev = nullptr;
+
+    // Reverse first half while finding the middle
+    while (fast && fast->next) {
+        fast = fast->next->next;
+
+        // Reverse logic
+        ListNode* nextNode = slow->next;
+        slow->next = prev;
+        prev = slow;
+        slow = nextNode;
+    }
+
+    // If odd-length list, skip the middle node
+    if (fast) {
+        slow = slow->next;
+    }
+
+    // Now, `prev` is the head of reversed first half,
+    // and `slow` is the head of the second half
+    while (prev && slow) {
+        if (prev->val != slow->val) return false;
+        prev = prev->next;
+        slow = slow->next;
+    }
+
+    return true;
+}
+
+// Reorder List
+ListNode* reverse(ListNode* head) {
+    ListNode* prev = nullptr;
+    while (head) {
+        ListNode* nextNode = head->next;
+        head->next = prev;
+        prev = head;
+        head = nextNode;
+    }
+    return prev;
+}
+
+void reorderList(ListNode* head) {
+    if (!head || !head->next || !head->next->next) return;
+
+    // Step 1: Find the middle
+    ListNode* slow = head;
+    ListNode* fast = head;
+    while (fast->next && fast->next->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    // Step 2: Reverse second half
+    ListNode* second = reverse(slow->next);
+    slow->next = nullptr; // Break the first half
+
+    // Step 3: Merge first and second halves
+    ListNode* first = head;
+    while (second) {
+        ListNode* tmp1 = first->next;
+        ListNode* tmp2 = second->next;
+
+        first->next = second;
+        second->next = tmp1;
+
+        first = tmp1;
+        second = tmp2;
+    }
+}
