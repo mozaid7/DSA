@@ -703,3 +703,202 @@ void reorderList(ListNode* head) {
         second = tmp2;
     }
 }
+
+// Delete Duplicate Elements
+ListNode* deleteDuplicates(ListNode* head) {
+    ListNode* dummy = new ListNode(0);
+    dummy->next = head;
+
+    ListNode* prev = dummy;
+
+    while (head != nullptr) {
+        if (head->next != nullptr && head->val == head->next->val) {
+            int duplicateVal = head->val;
+
+            while (head != nullptr && head->val == duplicateVal) {
+                ListNode* temp = head;
+                head = head->next;
+                delete temp;
+            }
+
+            prev->next = head;
+        } else {
+            prev = prev->next;
+            head = head->next;
+        }
+    }
+
+    ListNode* result = dummy->next;
+    delete dummy;
+    return result;
+}
+
+// Game Of Life
+int countLiveNeighbors(vector<vector<int>>& board, int row, int col, int m, int n) {
+    int live = 0;
+    vector<pair<int, int>> directions = {
+        {-1, -1}, {-1, 0}, {-1, 1},
+        {0, -1},          {0, 1},
+        {1, -1}, {1, 0}, {1, 1}
+    };
+
+    for (auto dir : directions) {
+        int r = row + dir.first;
+        int c = col + dir.second;
+
+        if (r >= 0 && r < m && c >= 0 && c < n && abs(board[r][c]) == 1) {
+            live++;
+        }
+    }
+
+    return live;
+}
+
+void gameOfLife(vector<vector<int>>& board) {
+    int m = board.size(), n = board[0].size();
+
+    // Apply rules with encoding
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            int live = countLiveNeighbors(board, i, j, m, n);
+
+            if (board[i][j] == 1) {
+                if (live < 2 || live > 3) board[i][j] = -1; // live → dead
+            } else {
+                if (live == 3) board[i][j] = 2; // dead → live
+            }
+        }
+    }
+
+    // Finalize state
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            board[i][j] = board[i][j] > 0 ? 1 : 0;
+        }
+    }
+}
+
+// Reverse Nodes in k-groups
+ListNode* reverseLinkedList(ListNode *head){
+    ListNode* temp = head;  
+    ListNode* prev = NULL;  
+    while(temp != NULL){  
+        ListNode* current = temp->next;  
+        temp->next = prev;  
+        prev = temp;  
+        temp = current; 
+    }
+    return prev;  
+}
+
+ListNode* getKthNode(ListNode* temp, int k){
+    int cnt = 1; 
+    while(temp != NULL && cnt < k){
+        cnt++; 
+        temp = temp -> next; 
+    }
+    return temp;
+}
+
+ListNode* reverseKGroup(ListNode* head, int k) {
+    ListNode* temp = head; 
+    ListNode* prevLast = NULL; 
+    while(temp != NULL){
+        ListNode* kThNode = getKthNode(temp, k); 
+        if(kThNode == NULL){
+            if(prevLast){
+                prevLast -> next = temp; 
+            }
+            break; 
+        }
+        ListNode* nextNode = kThNode -> next; 
+        kThNode -> next = NULL; 
+        reverseLinkedList(temp); 
+        if(temp == head){
+            head = kThNode;
+        }else{
+            prevLast -> next = kThNode; 
+        }
+        prevLast = temp; 
+        temp = nextNode; 
+    }
+    return head; 
+}
+
+// LRU Cache -- IMPORTANT
+class LRUCache {
+public:
+    class Node{
+        public: 
+            int key;
+            int val;
+            Node* prev;
+            Node* next;
+
+            Node(int key, int val){
+                this->key = key;
+                this->val = val;
+            }
+    };
+
+    Node* head = new Node(-1, -1);
+    Node* tail = new Node(-1, -1);
+
+    int cap;
+    unordered_map<int, Node*> m;
+
+    LRUCache(int capacity) {
+        cap = capacity;
+        head -> next = tail;
+        tail -> prev = head;
+    }
+
+    void addNode(Node* newnode){
+        Node* temp = head -> next;
+
+        newnode -> next = temp;
+        newnode -> prev = head;
+
+        head -> next = newnode;
+        temp -> prev = newnode;
+    }
+
+    void deleteNode(Node* delnode){
+        Node* prevv = delnode -> prev;
+        Node* nextt = delnode -> next;
+
+        prevv -> next = nextt;
+        nextt -> prev = prevv;
+    }
+    
+    int get(int key) {
+        if(m.find(key) != m.end()){
+            Node* resNode = m[key];
+            int ans = resNode -> val;
+
+            m.erase(key);
+            deleteNode(resNode);
+            addNode(resNode);
+
+            m[key] = head -> next;
+            return ans;
+        }
+        return -1;
+    }
+    
+    void put(int key, int value) {
+        if(m.find(key) != m.end()){
+            Node* curr = m[key];
+            m.erase(key);
+            deleteNode(curr);
+        }
+
+        if(m.size() == cap){
+            m.erase(tail -> prev -> key);
+            deleteNode(tail -> prev);
+        }
+
+        addNode(new Node(key, value));
+        m[key] = head -> next;
+    }
+};

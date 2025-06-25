@@ -391,3 +391,133 @@ int twoStacks(int maxSum, vector<int> a, vector<int> b) {
 
     return count;
 }
+
+// Priority Queue
+int lastStoneWeight(vector<int>& stones) {
+    priority_queue<int> maxHeap(stones.begin(), stones.end());
+
+    while (maxHeap.size() > 1) {
+        int stone1 = maxHeap.top(); maxHeap.pop();
+        int stone2 = maxHeap.top(); maxHeap.pop();
+
+        if (stone1 != stone2) {
+            maxHeap.push(stone1 - stone2);
+        }
+    }
+    return maxHeap.empty() ? 0 : maxHeap.top();
+}
+
+// Kth largest element
+int findKthLargest(vector<int>& nums, int k) {
+    priority_queue<int> maxHeap(nums.begin(), nums.end());
+
+    for (int i = 0; i < k - 1; i++) {
+        maxHeap.pop();
+    }
+    return maxHeap.top();
+}
+
+// Max Element is Stack
+// 1 x  -Push the element x into the stack.
+// 2    -Delete the element present at the top of the stack.
+// 3    -Print the maximum element in the stack.
+vector<int> getMax(vector<string> operations) {
+    stack<int> mainStack;
+    stack<int> maxStack;
+    vector<int> result;
+
+    for (const string& op : operations) {
+        if (op[0] == '1') {
+            int x = stoi(op.substr(2));
+            mainStack.push(x);
+
+            if (maxStack.empty() || x >= maxStack.top()) {
+                maxStack.push(x);
+            }
+        } else if (op[0] == '2') {
+            if (!mainStack.empty()) {
+                if (mainStack.top() == maxStack.top()) {
+                    maxStack.pop();
+                }
+                mainStack.pop();
+            }
+        } else if (op[0] == '3') {
+            if (!maxStack.empty()) {
+                result.push_back(maxStack.top());
+            }
+        }
+    }
+
+    return result;
+}
+
+// Queue using Two Stacks
+int main() {
+    int q;
+    cin >> q;
+
+    stack<int> inStack, outStack;
+
+    while (q--) {
+        int type;
+        cin >> type;
+
+        if (type == 1) {
+            int x;
+            cin >> x;
+            inStack.push(x);
+        } else {
+            if (outStack.empty()) {
+                while (!inStack.empty()) {
+                    outStack.push(inStack.top());
+                    inStack.pop();
+                }
+            }
+
+            if (type == 2 && !outStack.empty()) {
+                outStack.pop();
+            } else if (type == 3 && !outStack.empty()) {
+                cout << outStack.top() << endl;
+            }
+        }
+    }
+
+    return 0;
+}
+
+// Simple Text Editor
+int main() {
+    int Q;
+    cin >> Q;
+
+    string S = "";              
+    stack<string> history;       
+
+    while (Q--) {
+        int type;
+        cin >> type;
+
+        if (type == 1) {
+            string W;
+            cin >> W;
+            history.push(S);    
+            S += W;
+        } else if (type == 2) {
+            int k;
+            cin >> k;
+            history.push(S);    
+            S.erase(S.size() - k);
+        } else if (type == 3) {
+            int k;
+            cin >> k;
+            cout << S[k - 1] << endl;
+        } else if (type == 4) {
+            if (!history.empty()) {
+                S = history.top();
+                history.pop();
+            }
+        }
+    }
+
+    return 0;
+}
