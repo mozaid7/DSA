@@ -7,6 +7,7 @@ struct ListNode {
     ListNode() : val(0), next(nullptr) {}
     ListNode(int x) : val(x), next(nullptr) {}
     ListNode(int x, ListNode *next) : val(x), next(next) {}
+    
 };
 
 // 238. Product of Array Except Self
@@ -929,3 +930,69 @@ public:
         }
     }
 };
+
+// Recursion
+// Combination Sum
+void solve(vector<int> &candidates, int idx, int target, vector<int> &ds, vector<vector<int>> &ans){
+    if(target == 0){
+        ans.push_back(ds);
+        return;
+    }
+    if(idx == candidates.size() || target < 0){
+        return;
+    }
+    ds.push_back(candidates[idx]);
+    solve(candidates,idx,target-candidates[idx],ds,ans);
+    ds.pop_back();
+    solve(candidates,idx+1,target,ds,ans);
+}
+vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+    sort(candidates.begin(), candidates.end());
+    vector<vector<int>> ans;
+    vector<int> ds;
+    solve(candidates, 0, target, ds, ans);
+    return ans;
+}
+
+// Combination Sum 2
+void solve(vector<int> &candidates, int idx, int target, vector<int> &ds, set<vector<int>> &st){
+    if(target == 0){
+        st.insert(ds);
+        return;
+    }
+    for (int i = idx; i < candidates.size(); i++) {
+        if (candidates[i] > target) break;
+
+        // Skip duplicates
+        if (i > idx && candidates[i] == candidates[i - 1]) continue;
+
+        ds.push_back(candidates[i]);
+        solve(candidates, i + 1, target - candidates[i], ds, st); // i+1: use each number once
+        ds.pop_back();
+    }
+}
+vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+    sort(candidates.begin(), candidates.end());
+    set<vector<int>> st;
+    vector<vector<int>> ans;
+    vector<int> ds;
+    solve(candidates, 0, target, ds, st);
+    for(auto& v : st) ans.push_back(v);
+    return ans;
+}
+
+// Target Sum
+void solve(vector<int> &nums, int idx, int target, int& count){
+    if(idx == nums.size()){
+        if(target == 0) count++;
+        return;
+    }
+    solve(nums, idx+1, target+nums[idx],count);
+    solve(nums, idx+1, target-nums[idx],count);
+}
+
+int findTargetSumWays(vector<int>& nums, int target) {
+    int count= 0;
+    solve(nums,0,target, count);
+    return count;
+}
