@@ -931,28 +931,32 @@ public:
     }
 };
 
-// Recursion
+// Recursion & Backtracking
+
 // Combination Sum
-void solve(vector<int> &candidates, int idx, int target, vector<int> &ds, vector<vector<int>> &ans){
-    if(target == 0){
-        ans.push_back(ds);
+void findCombination(int ind, int target, vector < int > & arr, vector < vector < int >> & ans, vector < int > & ds) {
+    if (ind == arr.size()) {
+        if (target == 0) {
+            ans.push_back(ds);
+        }
         return;
     }
-    if(idx == candidates.size() || target < 0){
-        return;
+    // pick up the element 
+    if (arr[ind] <= target) {
+        ds.push_back(arr[ind]);
+        findCombination(ind, target - arr[ind], arr, ans, ds);
+        ds.pop_back();
     }
-    ds.push_back(candidates[idx]);
-    solve(candidates,idx,target-candidates[idx],ds,ans);
-    ds.pop_back();
-    solve(candidates,idx+1,target,ds,ans);
+    findCombination(ind + 1, target, arr, ans, ds);
 }
-vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-    sort(candidates.begin(), candidates.end());
-    vector<vector<int>> ans;
-    vector<int> ds;
-    solve(candidates, 0, target, ds, ans);
+
+vector<vector<int>>combinationSum(vector<int>&candidates,int target) {
+    vector < vector < int >> ans;
+    vector < int > ds;
+    findCombination(0, target, candidates, ans, ds);
     return ans;
 }
+
 
 // Combination Sum 2
 void solve(vector<int> &candidates, int idx, int target, vector<int> &ds, set<vector<int>> &st){
@@ -995,4 +999,50 @@ int findTargetSumWays(vector<int>& nums, int target) {
     int count= 0;
     solve(nums,0,target, count);
     return count;
+}
+
+// Subsets
+void backtrack(int index, vector<int>& nums, vector<int>& current, vector<vector<int>>& result) {
+    result.push_back(current);
+    
+    for (int i = index; i < nums.size(); ++i) {
+        current.push_back(nums[i]);
+        backtrack(i + 1, nums, current, result);
+        current.pop_back();
+    }
+}
+
+vector<vector<int>> subsets(vector<int>& nums) {
+    vector<vector<int>> result;
+    vector<int> current;
+    backtrack(0, nums, current, result);
+    return result;
+}
+
+// Permutations
+void backtrack(vector<int>& nums, vector<bool>& used, vector<int>& current, vector<vector<int>>& result) {
+    if (current.size() == nums.size()) {
+        result.push_back(current);
+        return;
+    }
+
+    for (int i = 0; i < nums.size(); i++) {
+        if (used[i]) continue;
+
+        used[i] = true;
+        current.push_back(nums[i]);
+
+        backtrack(nums, used, current, result);
+
+        current.pop_back();     // backtrack
+        used[i] = false;
+    }
+}
+vector<vector<int>> permute(vector<int>& nums) {
+    vector<vector<int>> result;
+    vector<int> current;
+    vector<bool> used(nums.size(), false);
+
+    backtrack(nums, used, current, result);
+    return result;
 }
