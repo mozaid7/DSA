@@ -1,6 +1,18 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+class Node {
+    public:
+        int data;
+        Node *left;
+        Node *right;
+        Node(int d) {
+            data = d;
+            left = NULL;
+            right = NULL;
+        }
+};
+
 // Starting with a 1-indexed array of zeros and a list of operations, for each operation add a value to each array element between two given indices, inclusive. Once all operations have been performed, return the maximum value in the array.
 long arrayManipulation(int n, vector<vector<int>> queries) {
     vector<long> arr(n + 2, 0);
@@ -520,4 +532,52 @@ int main() {
     }
 
     return 0;
+}
+
+// Is this a Binary Search Tree?
+bool isBSTUtil(Node* node, int min, int max) {
+    if (node == nullptr)
+        return true;
+
+    if (node->data <= min || node->data >= max)
+        return false;
+
+    return isBSTUtil(node->left, min, node->data) &&
+           isBSTUtil(node->right, node->data, max);
+}
+
+bool checkBST(Node* root) {
+    return isBSTUtil(root, INT_MIN, INT_MAX);
+}
+
+// BST insertion
+Node* insert(Node* root, int data) {
+    if (root == nullptr) {
+        return new Node(data);  
+    }
+
+    if (data <= root->data) {
+        root->left = insert(root->left, data);  
+    } else {
+        root->right = insert(root->right, data);  
+    }
+
+    return root;
+}
+
+// Huffman Coding
+void decode_huff(Node * root, string s) {
+    Node* curr = root;
+    for (char c : s) {
+        if (c == '0') {
+            curr = curr->left;
+        } else {
+            curr = curr->right;
+        }
+
+        if (curr->left == nullptr && curr->right == nullptr) {
+            cout << curr->data;
+            curr = root;
+        }
+    }
 }

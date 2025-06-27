@@ -1046,3 +1046,70 @@ vector<vector<int>> permute(vector<int>& nums) {
     backtrack(nums, used, current, result);
     return result;
 }
+
+// Count Inversions using Merge Sort
+long long mergeAndCount(int arr[], int temp[], int left, int mid, int right) {
+    long long inv_count = 0;
+    int i = left, j = mid + 1, k = left;
+
+    while (i <= mid && j <= right) {
+        if (arr[i] <= arr[j]) {
+            temp[k++] = arr[i++];
+        } else {
+            temp[k++] = arr[j++];
+            inv_count += (mid - i + 1);
+        }
+    }
+
+    while (i <= mid) temp[k++] = arr[i++];
+    while (j <= right) temp[k++] = arr[j++];
+
+    for (int x = left; x <= right; x++) {
+        arr[x] = temp[x];
+    }
+
+    return inv_count;
+}
+
+long long mergeSortAndCount(int arr[], int temp[], int left, int right) {
+    long long inv_count = 0;
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+
+        inv_count += mergeSortAndCount(arr, temp, left, mid);
+        inv_count += mergeSortAndCount(arr, temp, mid + 1, right);
+        inv_count += mergeAndCount(arr, temp, left, mid, right);
+    }
+    return inv_count;
+}
+
+int inversionCount(int arr[], int n) {
+    int* temp = new int[n];
+    long long result = mergeSortAndCount(arr, temp, 0, n - 1);
+    delete[] temp;
+    return (int)result;
+}
+
+// 17. Letter Combinations of a Phone Number
+void solve(string &digits, int idx, string str,vector<string> &dial, vector<string> &ans){
+    if(idx == digits.size()){
+        ans.push_back(str);
+        return;
+    }
+    int n = dial[digits[idx] - '0'].size();
+    for(int i=0; i<n; i++){
+        solve(digits, idx+1, str+dial[digits[idx] - '0'][i],dial,ans);
+    }
+}
+vector<string> letterCombinations(string digits) {
+    if(digits.size() == 0) return {};
+    vector<string> dial = {
+        "0", "1", "abc", "def", 
+        "ghi", "jkl", "mno",
+        "pqrs", "tuv", "wxyz"
+    };
+    vector<string>ans;
+    string str = "";
+    solve(digits,0,str,dial,ans);
+    return ans;
+}
