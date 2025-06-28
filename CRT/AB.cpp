@@ -1,6 +1,18 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+class Node {
+    public:
+        int data;
+        Node *left;
+        Node *right;
+        Node(int d) {
+            data = d;
+            left = NULL;
+            right = NULL;
+        }
+};
+
 struct ListNode {
     int val;
     ListNode *next;
@@ -1111,5 +1123,101 @@ vector<string> letterCombinations(string digits) {
     vector<string>ans;
     string str = "";
     solve(digits,0,str,dial,ans);
+    return ans;
+}
+
+// Zigzag Level Order Traversal
+vector<vector<int>> zigzagLevelOrder(Node* root) {
+    vector<vector<int>> ans;
+    if (root == NULL) return ans;
+
+    queue<Node*> q;
+    q.push(root);
+    bool flag = true; // true = left to right, false = right to left
+
+    while (!q.empty()) {
+        int size = q.size();
+        vector<int> level(size); // pre-allocate the level vector
+
+        for (int i = 0; i < size; i++) {
+            Node* node = q.front();
+            q.pop();
+
+            int index = flag ? i : (size - 1 - i); // correct index based on direction
+            level[index] = node->data;
+
+            if (node->left != NULL) q.push(node->left);
+            if (node->right != NULL) q.push(node->right);
+        }
+
+        ans.push_back(level);
+        flag = !flag; // flip direction for next level
+    }
+
+    return ans;
+}
+
+// Binary Tree Right Side View
+vector<int> rightSideView(Node* root) {
+    if(root == NULL) return {};
+    queue<Node*>q;
+    vector<int> ans;
+    q.push(root);
+
+    while(!q.empty()){
+        int size = q.size();
+        for(int i = 1; i<=size; i++){
+            Node* node = q.front();
+            q.pop();
+            if(node->left != NULL) q.push(node->left);
+            if(node->right != NULL) q.push(node->right);
+            if(i == size) ans.push_back(node->data);
+        }
+    }
+    return ans;
+}
+
+// Top View of Binary Tree
+vector<int> topView(Node *root) {
+    vector<int> ans;
+    map<int, Node*> mp;
+    queue<pair<Node*, int>> q;
+    q.push({root, 0});
+    
+    while(!q.empty()){
+        Node* top = q.front().first;
+        int vl = q.front().second;
+        q.pop();
+        if(mp.find(vl) == mp.end()){
+            mp[vl] = top;
+        }
+        if(top->left != NULL) q.push({top->left, vl-1});
+        if(top->right != NULL) q.push({top->right, vl+1});
+    }
+    for(auto it : mp){
+        ans.push_back(it.second->data);
+    }
+    return ans;
+    
+}
+
+// Bottom View of a Binary Tree
+vector<int> bottomView(Node *root) {
+    vector<int> ans;
+    map<int, Node*> mp;
+    queue<pair<Node*, int>> q;
+    q.push({root, 0});
+    
+    while(!q.empty()){
+        Node* top = q.front().first;
+        int vl = q.front().second;
+        q.pop();
+        mp[vl] = top;
+        if(top->left != NULL) q.push({top->left, vl-1});
+        if(top->right != NULL) q.push({top->right, vl+1});
+    }
+    for(auto it : mp){
+        ans.push_back(it.second->data);
+    }
     return ans;
 }
