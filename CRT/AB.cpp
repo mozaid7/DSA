@@ -1221,3 +1221,144 @@ vector<int> bottomView(Node *root) {
     }
     return ans;
 }
+
+// Path Sum 2
+void solve(Node* root, int targetSum, vector<vector<int>> &ans, vector<int> &ds){
+    if(!root){
+        return;
+    }
+    ds.push_back(root->data);
+    if(!root->left && !root->right){
+        if(root->data == targetSum){
+            ans.push_back(ds);
+        }
+        ds.pop_back();
+        return;
+    }
+    solve(root->left, targetSum-root->data, ans, ds);
+    solve(root->right, targetSum-root->data, ans, ds);
+    ds.pop_back();
+}
+vector<vector<int>> pathSum(Node* root, int targetSum) {
+    vector<vector<int>> ans;
+    vector<int> ds;
+    solve(root, targetSum, ans, ds);
+    return ans;
+}
+
+// Valid Binary Tree
+bool isValidBST(Node* root) {
+    return isValid(root, LONG_MIN, LONG_MAX);
+}
+
+bool isValid(Node* root, long min, long max) {
+    if (root == nullptr)
+    return true;
+
+    if (root->data <= min || root->data >= max)
+        return false;
+
+    return isValid(root->left, min, root->data) && isValid(root->right, root->data, max);
+}
+
+// Unique BST
+int solve(int num){
+    if(num <= 1) return 1;
+    int ans = 0;
+    for(int i = 1; i <= num; i++){
+        ans += solve(i-1) * solve(num-i);
+    }
+    return ans;
+}
+
+int numTrees(int n) {
+    return solve(n);
+}
+
+// Unique Search Tress 2
+vector<Node*> solve(int l,int r){  
+    if(l>r) return {NULL};
+    vector<Node*> ans;
+    for(int i=l;i<=r;i++){
+        vector<Node*> left = solve(l,i-1);
+        vector<Node*> right = solve(i+1,r);
+        for(auto x:left){
+            for(auto y:right){
+                Node* cur = new Node(i);
+                cur->left = x;
+                cur->right = y;
+                ans.push_back(cur);
+            }
+        }
+    }
+    return ans;
+}
+vector<Node*> generateTrees(int n) {
+    return solve(1,n);
+}
+
+// Binary Tree Cameras
+static const int hasCamera = 1;
+static const int Monitored = 2;
+static const int unMonitored = 3;
+int ans = 0;
+int findStatus(Node* root){
+    if(!root){
+        return Monitored;
+    }
+    if(!root->left && !root->right){
+        return unMonitored;
+    }
+    int left = findStatus(root->left);
+    int right = findStatus(root->right);
+    if(left == unMonitored || right == unMonitored){
+        ans++;
+        return hasCamera;
+    }
+    if(left == hasCamera || right == hasCamera){
+        return Monitored;
+    }
+    return unMonitored;
+}
+
+int minCameraCover(Node* root) {
+    ans = 0;
+    int rootStatus = findStatus(root);
+    if(rootStatus == unMonitored) ans++;
+    return ans;
+}
+
+// Rotten Oranges
+int orangesRotting(vector<vector<int>>& grid) {
+    int rows = grid.size(), cols = grid[0].size();
+    queue<pair<int, int>> q;
+    int fresh = 0, time = 0;
+
+    for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+            if(grid[i][j] == 2)
+                q.push({i, j});
+            else if(grid[i][j] == 1)
+                fresh++;
+        }
+    }
+    vector<pair<int, int>> dirs = {{-1,0}, {0,1}, {1,0}, {0,-1}};
+
+    while(!q.empty() && fresh > 0){
+        int sz = q.size();
+        while(sz--){
+            auto [x, y] = q.front(); q.pop();
+            for(auto [dx, dy] : dirs){
+                int nx = x + dx, ny = y + dy;
+                if(nx >= 0 && ny >= 0 && nx < rows && ny < cols && grid[nx][ny] == 1){
+                    grid[nx][ny] = 2; // rot it
+                    q.push({nx, ny});
+                    fresh--;
+                }
+            }
+        }
+        time++; // after 1 layer = 1 minute
+    }
+
+    return (fresh == 0) ? time : -1;
+}
