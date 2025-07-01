@@ -101,7 +101,7 @@ bool isCycle(int V, vector<vector<int>>& edges) {
 
     vector<int> vis(V, 0);
     for (int i = 0; i < V; i++) {
-        if (!vis[i]) {
+        if (!vis[i]) {  // condition if there are disconnected components in Graph
             if (detect(i, adj, vis)) return true;
         }
     }
