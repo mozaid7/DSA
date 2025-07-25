@@ -433,3 +433,44 @@ int findLargestMinDistance(vector<int> &boards, int k) {
     }
     return low;
 }
+
+// Longest Increasing Subsequence
+int lengthOfLIS(vector<int>& nums) {
+    vector<int> ans;
+    ans.push_back(nums[0]);
+    for(int i=1; i<nums.size(); i++){
+        if(nums[i] > ans.back()) ans.push_back(nums[i]);
+        else {
+            int idx = lower_bound(ans.begin(), ans.end(), nums[i]) - ans.begin();
+            ans[idx] = nums[i];
+        }
+    }
+    return ans.size();
+}
+
+// Top K frequent Elements
+vector<int> topKFrequent(vector<int>& nums, int k) {
+    unordered_map<int, int> freq;
+    for (int num : nums) freq[num]++;
+
+    priority_queue<pair<int, int>> pq;
+    for (auto& [num, count] : freq)
+        pq.push({count, num});
+
+    vector<int> res;
+    while (k--) {
+        res.push_back(pq.top().second);
+        pq.pop();
+    }
+    return res;
+}
+
+// Kth largest element in an array
+int findKthLargest(vector<int>& nums, int k) {
+    priority_queue<int> maxHeap(nums.begin(), nums.end());
+
+    for (int i = 0; i < k - 1; i++) {
+        maxHeap.pop();
+    }
+    return maxHeap.top();
+}
