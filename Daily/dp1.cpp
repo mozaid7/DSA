@@ -70,7 +70,7 @@ vector<int> frequencySort(vector<int>& nums) {
     return nums;
 }
 
-// Hand Of Straights
+// 846 Hand Of Straights
 bool isNStraightHand(vector<int>& hand, int groupSize) {
     int n = hand.size();
     if(n % groupSize != 0) {
@@ -95,4 +95,60 @@ bool isNStraightHand(vector<int>& hand, int groupSize) {
         }
     }
     return true;
+}
+
+// Reduce the Array to Half
+int minSetSize(vector<int>& arr) {
+    int n = arr.size();
+    int half = n/2;
+
+    unordered_map<int, int> mp;
+    for(int &num : arr){
+        mp[num]++;
+    }
+
+    vector<int> freq;
+    for(auto [_, cnt] : mp) freq.push_back(cnt);
+    sort(freq.begin(), freq.end());
+
+    int ans = 0, removed = 0, i = freq.size() - 1;
+    while(removed < half){
+        ans+=1;
+        removed += freq[i--];
+    }
+    return ans;
+}
+
+// 767 Reorganizing String
+string reorganizeString(string s) {
+    unordered_map<char, int>mp;
+    for(auto st : s){
+        mp[st]++;
+    }
+
+    priority_queue<pair<int, char>> maxHeap;
+    for(auto &[ch, fr] : mp){
+        maxHeap.push({fr, ch});
+    }
+
+    string res;
+    while(maxHeap.size() >= 2){
+        auto [freq1, char1] = maxHeap.top(); maxHeap.pop();
+        auto [freq2, char2] = maxHeap.top(); maxHeap.pop();
+
+        res += char1;
+        res += char2;
+
+        if(--freq1 > 0) maxHeap.push({freq1, char1});
+        if(--freq2 > 0) maxHeap.push({freq2, char2});
+    }
+
+    if(!maxHeap.empty()){
+        auto [freq, ch] = maxHeap.top();
+        if(freq > 1) return "";
+        res += ch;
+    }
+
+    return res;
+    
 }
