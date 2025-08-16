@@ -58,7 +58,7 @@ vector<vector<int>> levelOrder(Node* root){
     return ans;
 }
 
-//Left side view i.e. left most node of each level
+//Right side view i.e. Right most node of each level
 vector<int> rightSideView(Node* root) {
     if(root == NULL) return {};
     queue<Node*>q;
@@ -143,4 +143,82 @@ vector<int> topView(Node *root) {
     }
     return ans;
     
+}
+
+// Kth Level of BT
+void KthLevel(Node* root, int k){
+    if(root == NULL) return;
+
+    if(k == 1){
+        cout << root->data << " ";
+        return;
+    }
+
+    KthLevel(root->left, k-1);
+    KthLevel(root->right, k-1);
+}
+
+// 1131 Max LEvel Sum of BT
+int maxLevelSum(TreeNode* root) {
+    if(root == NULL) return 0;
+    queue<TreeNode*>q;
+    q.push(root);
+
+    int maxSum = INT_MIN;
+    int ansLevel = 1;
+    int currLevel = 0;
+
+    while(!q.empty()){
+        int size = q.size();
+        int levelSum = 0;
+        currLevel++;
+
+        for(int i=0; i<size; i++){
+            TreeNode* node = q.front();
+            q.pop();
+            levelSum += node->val;
+
+            if(node->left != NULL) q.push(node->left);
+            if(node->right != NULL) q.push(node->right);
+        }
+
+        if(levelSum > maxSum){
+            maxSum = levelSum;
+            ansLevel = currLevel;
+        }
+    }
+    return ansLevel;
+}
+
+// LCA
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    if(root == NULL) return NULL;
+
+    if(root->val == p->val || root->val == q->val){
+        return root;
+    }
+
+    TreeNode* leftLCA = lowestCommonAncestor(root->left, p, q);
+    TreeNode* rightLCA = lowestCommonAncestor(root->right, p, q);
+
+    if(leftLCA && rightLCA){
+        return root;
+    } else if(leftLCA != NULL){
+        return leftLCA;
+    } else {
+        return rightLCA;
+    }
+}
+
+// Flatten Binary Tree
+TreeNode* nextRight = NULL;
+void flatten(TreeNode* root) {
+    if(root == NULL) return;
+
+    flatten(root->right);
+    flatten(root->left);
+
+    root->left = NULL;
+    root->right = nextRight;
+    nextRight = root;
 }

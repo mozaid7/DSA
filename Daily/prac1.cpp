@@ -134,3 +134,46 @@ bool exist(vector<vector<char>>& board, string word) {
     }
     return false;
 }
+
+vector<int> rightSideView(TreeNode* root){
+    if(root == NULL) return {};
+    queue<TreeNode*>q;
+    vector<int>ans;
+    q.push(root);
+
+    while(!q.empty()){
+        int size = q.size();
+        for(int i=1; i<=size; i++){
+            TreeNode* node = q.front();
+            q.pop();
+            if(node->left != NULL) q.push(node->left);
+            if(node->right != NULL) q.push(node->right);
+            if(i == size) ans.push_back(node->val);
+        }
+    }
+    return ans;
+
+}
+
+vector<int> topView(Node *root) {
+    vector<int> ans;
+    map<int, Node*>mp;
+    queue<pair<Node*, int>>q;
+    q.push({root, 0});
+
+    while(!q.empty()){
+        Node* top = q.front().first;
+        int v1 = q.front().second;
+        q.pop();
+        if(mp.find(v1) == mp.end()){
+            mp[v1] = top;
+        }
+        if(top->left != NULL) q.push({top->left, v1-1});
+        if(top->right != NULL) q.push({top->right, v1+1});
+    }
+    for(auto it : mp){
+        ans.push_back(it.second->data);
+    }
+    return ans;
+    
+}
