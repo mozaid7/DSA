@@ -279,3 +279,80 @@ int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
     }
     return 0;
 }
+
+// Dijkstra Algorithm
+vector<int> dijkstra(int V, vector<vector<int>> &edges, int src) {
+    vector<vector<pair<int,int>>> adj(V);
+    for(auto &e : edges){
+        int u = e[0];
+        int v = e[1];
+        int w = e[2];
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w}); 
+    }
+
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+    vector<int> dist(V, 1e9);
+    
+    dist[src] = 0;
+    pq.push({0, src});
+    
+    while(!pq.empty()){
+        int dis = pq.top().first;
+        int node = pq.top().second;
+        pq.pop();
+        
+        for(auto it: adj[node]){
+            int adjNode = it.first;
+            int edgeWeight = it.second;
+            
+            if(dis + edgeWeight < dist[adjNode]){
+                dist[adjNode] = dis + edgeWeight;
+                pq.push({dist[adjNode], adjNode});
+            }
+        }
+    }
+    return dist;
+}
+
+// Prim's Algorithm
+int spanningTree(int V, vector<vector<int>>& edges) {
+    // Build adjacency list
+    vector<vector<pair<int,int>>> adj(V);
+    for(auto &e : edges){
+        int u = e[0];
+        int v = e[1];
+        int w = e[2];
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w}); 
+    }
+    
+    // Min-heap {weight, node}
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+    vector<int> vis(V, 0);
+    
+    pq.push({0, 0}); // {weight, startNode}
+    int sum = 0;
+    
+    while(!pq.empty()){
+        auto it = pq.top();
+        pq.pop();
+        int wt = it.first;
+        int node = it.second;
+        
+        if(vis[node]) continue;
+        
+        vis[node] = 1;
+        sum += wt;
+        
+        for(auto el : adj[node]){
+            int adjNode = el.first;
+            int edW = el.second;
+            
+            if(!vis[adjNode]){
+                pq.push({edW, adjNode});
+            }
+        }
+    }
+    return sum;
+}

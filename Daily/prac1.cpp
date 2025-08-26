@@ -199,3 +199,21 @@ ListNode* mergeTwoLists(ListNode* list1, ListNode* list2){
     else temp->next = t2;
     return dNode->next;
 }
+
+// Sliding Window Maximum
+vector<int> maxSlidingWindow(vector<int>& nums, int k){
+    int n = nums.size();
+    deque<int> dq;
+    vector<int> lst;
+    for(int i=0; i<n; i++){
+        while(!dq.empty() && dq.front <= i-k){
+            dp.pop_front();
+        }
+        while(!dq.empty() && nums[dq.back()] <= nums[i]){
+            dq.pop_back();
+        }
+        dq.push_back(i);
+        if (i >= k-1) lst.push_back(nums[dq.front()]);
+    }
+    return lst;
+}
