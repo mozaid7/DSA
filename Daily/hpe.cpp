@@ -37,17 +37,17 @@ const int MAXN = 100005;
 vector<int> adj[MAXN];
 long long dp[MAXN][2];
 int wt[MAXN];
+bool visited[MAXN];
 
 void dfs(int node, int parent) {
+    visited[node] = true;
     dp[node][1] = wt[node];
-    dp[node][0] = 0;        
+    dp[node][0] = 0;
 
     for (int child : adj[node]) {
         if (child == parent) continue;
         dfs(child, node);
-
         dp[node][0] += max(dp[child][0], dp[child][1]);
-
         dp[node][1] += dp[child][0];
     }
 }
@@ -56,6 +56,7 @@ long long findMaximumSum(int tree_nodes, vector<int>& tree_from, vector<int>& tr
     for (int i = 0; i < tree_nodes; i++) {
         adj[i].clear();
         dp[i][0] = dp[i][1] = 0;
+        visited[i] = false;
     }
 
     for (int i = 0; i < (int)tree_from.size(); i++) {
@@ -69,40 +70,39 @@ long long findMaximumSum(int tree_nodes, vector<int>& tree_from, vector<int>& tr
         wt[i] = weight[i];
     }
 
-    dfs(0, -1);
-
-    return max(dp[0][0], dp[0][1]);
-}
-
-// Maximum Sum Increasing Sub-Sequence
-int maximizeScore(vector<int>& arr, int k) {
-    priority_queue<int> pq;
-    for (int num : arr) pq.push(num);
-
-    int score = 0;
-
-    while (!pq.empty()) {
-        int x = pq.top();
-        pq.pop();
-
-        if (x <= 0) continue;
-
-        int divideGain = (x + 2) / 3; // ceil(x/3)
-
-        if (k >= divideGain) {
-            // Subtract operation
-            score += k;
-            x -= k;
-        } else {
-            // Divide operation
-            score += divideGain;
-            x = (x + 2) / 3;
+    long long totalSum = 0;
+    for (int root = 0; root < tree_nodes; root++) {
+        if (!visited[root]) {
+            dfs(root, -1);
+            long long componentMax = max(dp[root][0], dp[root][1]);
+            totalSum += max(0LL, componentMax);
         }
-
-        if (x > 0) pq.push(x);
     }
 
-    return score;
+    return totalSum;
+}
+
+
+// Maximum Sum Increasing Sub-Sequence
+int maxSumIS(vector<int>& arr) {
+    int n = arr.size();
+    int ans = 0;
+
+    vector<int> dp(n, 0);
+
+    for (int i = 0; i < n; i++) {
+        dp[i] = arr[i]; // base case
+
+        for (int j = 0; j < i; j++) {
+            if (arr[j] < arr[i]) {
+                dp[i] = max(dp[i], arr[i] + dp[j]);
+            }
+        }
+
+        ans = max(ans, dp[i]);
+    }
+
+    return ans;
 }
 
 // IPv4 Validation
@@ -136,4 +136,79 @@ vector<string> checkIPRegion(string ip) {
     else result.push_back("Not Valid"); // Region 5 not allowed
 
     return result;
+}
+
+// Even Difference
+int findLongestSubsequence(vector<int>& arr) {
+    int n = arr.size();
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+
+    sort(arr.begin(), arr.end());
+
+    vector<vector<int>> dp(n, vector<int>(2, 0));
+
+    for (int i = 0; i < n; i++) {
+        dp[i][0] = 1; // base case: subsequence starting here
+        dp[i][1] = 0;
+    }
+
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            int diff = arr[i] - arr[j];
+
+            if (diff % 2 == 0) {
+                if (dp[j][0] > 0) {
+                    dp[i][0] = max(dp[i][0], dp[j][0] + 1);
+                }
+                if (dp[j][1] > 0) {
+                    dp[i][1] = max(dp[i][1], dp[j][1] + 1);
+                }
+            } else {
+                if (dp[j][0] > 0) {
+                    dp[i][1] = max(dp[i][1], dp[j][0] + 1);
+                }
+                if (dp[j][1] > 0) {
+                    dp[i][0] = max(dp[i][0], dp[j][1] + 1);
+                }
+            }
+        }
+    }
+
+    int maxLen = 1;
+    for (int i = 0; i < n; i++) {
+        maxLen = max(maxLen, dp[i][0]);
+    }
+
+    return maxLen;
+}
+
+// Max Score
+long long maximizeScore(vector<int>& arr, int k) {
+    // max-heap
+    priority_queue<int> pq;
+    for (int num : arr) pq.push(num);
+
+    long long score = 0;
+
+    while (!pq.empty()) {
+        int x = pq.top();
+        pq.pop();
+
+        if (x <= 0) continue;
+
+        int divideGain = (x + 2) / 3;  // equivalent to ceil(x / 3.0)
+
+        if (k >= divideGain) {
+            score += k;
+            x -= k;
+        } else {
+            score += divideGain;
+            x = (x + 2) / 3;  // ceil(x / 3.0)
+        }
+
+        if (x > 0) pq.push(x);
+    }
+
+    return score;
 }
