@@ -1,63 +1,57 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <cstring>
-
+#include <bits/stdc++.h>
 using namespace std;
-
-const int MAXN = 1001;
-
-vector<int> adj[MAXN];
-bool visited[MAXN];
-vector<int> component;
-vector<int> expertise;
-
-void dfs(int u) {
-    visited[u] = true;
-    component.push_back(u);
-    
-    for (int v : adj[u]) {
-        if (!visited[v]) {
-            dfs(v);
-        }
-    }
-}
-
-int main() {
-    int n, c;
-    cin >> n >> c;
-
-    for (int i = 0; i < c; i++) {
-        int u, v;
-        cin >> u >> v;
-        adj[u - 1].push_back(v - 1); 
-        adj[v - 1].push_back(u - 1);
-    }
-
-    expertise.resize(n);
-    for (int i = 0; i < n; i++) {
-        cin >> expertise[i];
-    }
-
-    memset(visited, false, sizeof(visited));
-    
-    int max_expertise = 0;
-
-    for (int i = 0; i < n; i++) {
-        if (!visited[i]) {
-            component.clear();
-            dfs(i); 
-
-            int component_expertise = 0;
-            for (int emp : component) {
-                component_expertise += expertise[emp];
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int M;
+    if(!(cin>>M)) return 0;
+    vector<vector<long long>> w(M, vector<long long>(M));
+    for(int i=0;i<M;i++) for(int j=0;j<M;j++) cin>>w[i][j];
+    vector<long long> people(M,0);
+    for(int i=1;i<M;i++) cin>>people[i];
+    long long C; cin>>C;
+    const long long INF = 9e18;
+    vector<long long> dist(M, INF);
+    dist[0]=0;
+    priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<pair<long long,int>>>pq;
+    pq.push({0,0});
+    while(!pq.empty()){
+        auto [d,u]=pq.top(); pq.pop();
+        if(d!=dist[u]) continue;
+        for(int v=0;v<M;v++){
+            if(u==v) continue;
+            long long nd = d + w[u][v];
+            if(nd < dist[v]){
+                dist[v]=nd;
+                pq.push({nd,v});
             }
-
-            max_expertise = max(max_expertise, component_expertise);
         }
     }
-
-    cout << max_expertise << endl;
-
+    vector<int> parent(M,-1);
+    for(int u=1;u<M;u++){
+        for(int v=0;v<M;v++){
+            if(v==u) continue;
+            if(dist[v] + w[v][u] == dist[u]){
+                parent[u]=v;
+                break;
+            }
+        }
+    }
+    vector<vector<int>> children(M);
+    for(int i=1;i<M;i++){
+        if(parent[i]==-1){ cout<<"Impossible\n"; return 0; }
+        children[parent[i]].push_back(i);
+    }
+    function<long long(int)> dfs = [&](int u)->long long{
+        long long s = people[u];
+        for(int v: children[u]) s += dfs(v);
+        return s;
+    };
+    long long ans = 0;
+    for(int v: children[0]){
+        long long s = dfs(v);
+        ans += (s + C - 1) / C;
+    }
+    cout<<ans<<"\n";
     return 0;
 }

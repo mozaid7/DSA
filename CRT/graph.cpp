@@ -427,8 +427,46 @@ string findOrder(vector<string> &words) {
     unordered_set<char> present(chars.begin(), chars.end());
     for (auto it : topo) {
         char c = char(it + 'a');
-        if (present.count(c)) ans += c;
+        if (present.count(c)) ans += c; // if char is present in set then only include in ans.
     }
 
     return ans;
+}
+
+// Cheapest flight within K
+int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+    vector<vector<pair<int, int>>> adj(n);
+    
+    for(auto &it : flights){
+        adj[it[0]].push_back({it[1], it[2]});
+    }
+
+    queue<pair<int, pair<int,int>>> q;
+    q.push({0, {src, 0}}); // {stops, {node, cost}}
+
+    vector<int> dist(n, 1e9);
+    dist[src] = 0;
+
+    while(!q.empty()){
+        auto it = q.front();
+        q.pop();
+
+        int stops = it.first;
+        int node = it.second.first;
+        int cost = it.second.second;
+
+        if(stops > k) continue;
+
+        for(auto iter : adj[node]){
+            int adjNode = iter.first;
+            int edW = iter.second;
+
+            if(cost + edW < dist[adjNode]){
+                dist[adjNode] = cost + edW;
+                q.push({stops + 1, {adjNode, cost + edW}});
+            }
+        }
+    }
+
+    return (dist[dst] == 1e9) ? -1 : dist[dst];
 }

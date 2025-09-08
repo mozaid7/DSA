@@ -1,73 +1,94 @@
-#include <iostream>
-#include <vector>
-#include <set>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-bool isValidSudoku(int grid[9][9]) {
-    for (int i = 0; i < 9; i++) {
-        set<int> rowSet, colSet;
-        for (int j = 0; j < 9; j++) {
-            if (grid[i][j] != 0 && !rowSet.insert(grid[i][j]).second) {
-                return false;
-            }
-            if (grid[j][i] != 0 && !colSet.insert(grid[j][i]).second) {
-                return false;
-            }
-        }
-    }
+struct Point {
+    double x, y;
+};
 
-    for (int row = 0; row < 9; row += 3) {
-        for (int col = 0; col < 9; col += 3) {
-            set<int> boxSet;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    int num = grid[row + i][col + j];
-                    if (num != 0 && !boxSet.insert(num).second) {
-                        return false;
-                    }
-                }
-            }
-        }
+double polygonArea(vector<Point>& poly) {
+    int n = poly.size();
+    double area = 0;
+    for (int i = 0; i < n; i++) {
+        int j = (i + 1) % n;
+        area += poly[i].x * poly[j].y - poly[j].x * poly[i].y;
     }
-    
-    return true;
+    return fabs(area) / 2.0;
+}
+
+double distance(Point a, Point b) {
+    return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 }
 
 int main() {
-    int grid[9][9];
-    vector<pair<int, int>> errors;
-    vector<int> hintList;
-    int K;
-
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
-            cin >> grid[i][j];
-        }
+    int N; 
+    cin >> N;
+    vector<pair<Point, Point>> sticks(N);
+    for (int i = 0; i < N; i++) {
+        cin >> sticks[i].first.x >> sticks[i].first.y 
+            >> sticks[i].second.x >> sticks[i].second.y;
     }
 
-    int hintLen;
-    cin >> hintLen;
-    hintList.resize(hintLen);
-    for (int i = 0; i < hintLen; i++) {
-        cin >> hintList[i];
+    // Step 1: Build adjacency map
+    map<pair<double,double>, vector<pair<double,double>>> adj;
+    for (auto& s : sticks) {
+        adj[{s.first.x, s.first.y}].push_back({s.second.x, s.second.y});
+        adj[{s.second.x, s.second.y}].push_back({s.first.x, s.first.y});
     }
 
-    cin >> K;
-
-    if (!isValidSudoku(grid)) {
-        cout << "Impossible" << endl;
-    } else {
-        if (errors.size() == 0) {
-            cout << "Won" << endl;
-        } else if (static_cast<int>(errors.size()) <= K) {  // Cast size to int for comparison
-            for (auto& err : errors) {
-                cout << err.first << " " << err.second << endl;
+    // Step 2: Try to find a cycle (polygon)
+    set<pair<double,double>> visited;
+    vector<Point> poly;
+    function<bool(pair<double,double>, pair<double,double>)> dfs = [&](auto u, auto parent) {
+        if (visited.count(u)) return false;
+        visited.insert(u);
+        poly.push_back({u.first, u.second});
+        for (auto v : adj[u]) {
+            if (v == parent) continue;
+            if (!visited.count(v)) {
+                if (dfs(v, u)) return true;
+            } else {
+                poly.push_back({v.first, v.second}); // cycle found
+                return true;
             }
-        } else {
-            cout << "Impossible" << endl;
+        }
+        poly.pop_back();
+        return false;
+    };
+
+    bool found = false;
+    for (auto& [u, neigh] : adj) {
+        if (!visited.count(u)) {
+            if (dfs(u, {-1,-1})) {
+                found = true;
+                break;
+            }
         }
     }
+
+    if (!found || poly.size() < 3) {
+        cout << "No\n";
+        return 0;
+    }
+
+    // Step 3: Compute area using shoelace
+    double area = polygonArea(poly);
+
+    // Step 4: Check Arjun's possibility
+    double polygonPerimeter = 0;
+    for (int i = 0; i < (int)poly.size()-1; i++) {
+        polygonPerimeter += distance(poly[i], poly[i+1]);
+    }
+
+    double totalStickLength = 0;
+    for (auto& s : sticks) {
+        totalStickLength += distance(s.first, s.second);
+    }
+
+    double leftover = totalStickLength - polygonPerimeter;
+    cout << "Yes\n";
+    if (leftover + 1e-6 >= polygonPerimeter) cout << "Yes\n";
+    else cout << "No\n";
+    cout << fixed << setprecision(2) << area << "\n";
 
     return 0;
 }
