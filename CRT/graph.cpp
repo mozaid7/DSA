@@ -356,3 +356,79 @@ int spanningTree(int V, vector<vector<int>>& edges) {
     }
     return sum;
 }
+
+// Distance to Nearest 1
+vector<vector<int>> nearest(vector<vector<int>>& grid) {
+    int n = grid.size();
+    int m = grid[0].size();
+    
+    vector<vector<int>> vis(n, vector<int>(m,0));
+    vector<vector<int>> dist(n, vector<int>(m,0));
+    queue<pair<pair<int, int>, int>> q;
+    vector<pair<int, int>> dir = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+    
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < m; j++) {
+            if(grid[i][j] == 1) {
+                q.push({{i, j}, 0});
+                vis[i][j] = 1;
+            }
+        }
+    }
+    
+    while(!q.empty()){
+        int row = q.front().first.first;
+        int col = q.front().first.second;
+        int steps = q.front().second;
+        q.pop();
+        dist[row][col] = steps;
+        
+        for(auto &d : dir) {
+            int nx = row + d.first;
+            int ny = col + d.second;
+            if(nx >= 0 && ny >= 0 && nx < n && ny < m && !vis[nx][ny]) {
+                vis[nx][ny] = 1;
+                q.push({{nx, ny}, steps + 1});
+            }
+        }
+        
+    }
+    return dist;
+}
+
+// Alien Dictionary
+string findOrder(vector<string> &words) {
+    int N = words.size();
+
+    unordered_set<char> chars;
+    for (auto &w : words) {
+        for (auto c : w) chars.insert(c);
+    }
+
+    int K = chars.size(); 
+    vector<int> adj[26];  
+
+    for (int i = 0; i < N - 1; i++) {
+        string s1 = words[i];
+        string s2 = words[i + 1];
+        int len = min(s1.size(), s2.size());
+        for (int ptr = 0; ptr < len; ptr++) {
+            if (s1[ptr] != s2[ptr]) {
+                adj[s1[ptr] - 'a'].push_back(s2[ptr] - 'a');
+                break;
+            }
+        }
+    }
+
+    vector<int> topo = topoSort(26, adj); // use topo sort function here.
+
+    // Step 4: Build answer string (only for characters present in dict)
+    string ans = "";
+    unordered_set<char> present(chars.begin(), chars.end());
+    for (auto it : topo) {
+        char c = char(it + 'a');
+        if (present.count(c)) ans += c;
+    }
+
+    return ans;
+}
