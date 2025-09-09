@@ -549,3 +549,66 @@ int countPaths(int n, vector<vector<int>>& roads) {
     }
     return ways[n-1] % mod;
 }
+
+// Bi-Partite Graph
+bool bfs(int node, vector<int> &color, vector<vector<int>> &adj){
+    queue<int> q;
+    q.push(node);
+    color[node] = 0;
+
+    while(!q.empty()){
+        int top = q.front();
+        q.pop();
+
+        for(auto it : adj[top]){
+            if(color[it] == -1){
+                color[it] = !color[top];
+                q.push(it);
+            } else if(color[it] == color[top]){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool isBipartite(vector<vector<int>>& graph) {
+    int n = graph.size();
+    vector<int> color(n, -1);
+
+    for(int i=0; i<n; i++){
+        if(color[i] == -1){
+            color[i] = 0;
+            if(!bfs(i, color, graph)) return false;
+        }
+    }
+    return true;
+}
+
+// Flood Fill Algo
+vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+    int n = image.size();
+    int m = image[0].size();
+    int oldColor = image[sr][sc];
+
+    if(oldColor == color) return image;
+
+    queue<pair<int, int>> q;
+    q.push({sr, sc});
+    image[sr][sc] = color;
+
+    vector<pair<int, int>> dirs = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+    while(!q.empty()){
+        auto [x,y] = q.front();
+        q.pop();
+
+        for(auto [dx,dy] : dirs){
+            int nx = x+dx, ny = y+dy;
+            if(nx >= 0 && ny >= 0 && nx < n && ny < m && image[nx][ny] == oldColor){
+                image[nx][ny] = color;
+                q.push({nx, ny});
+            }
+        }
+    }
+    return image;
+}
