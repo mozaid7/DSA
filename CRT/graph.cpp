@@ -470,3 +470,82 @@ int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int
 
     return (dist[dst] == 1e9) ? -1 : dist[dst];
 }
+
+// Number Of Provinces
+void dfs(int node, vector<vector<int>> &adj, vector<int> &vis) {
+    vis[node] = 1;
+    for(auto it : adj[node]) {
+        if(!vis[it]) {
+            dfs(it, adj, vis);
+        }
+    }
+}
+
+int findCircleNum(vector<vector<int>>& isConnected) {
+    int n = isConnected.size();
+    vector<vector<int>> adj(n);
+
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            if(isConnected[i][j] == 1 && i != j) {
+                adj[i].push_back(j);
+            }
+        }
+    }
+
+    vector<int> vis(n, 0);
+    int cnt = 0;
+
+    for(int i = 0; i < n; i++) {
+        if(!vis[i]) {
+            cnt++;
+            dfs(i, adj, vis);
+        }
+    }
+    return cnt;
+}
+
+//  Number of Ways to arrive at a destination
+int countPaths(int n, vector<vector<int>>& roads) {
+    // adjacency list: node -> {neighbor, weight}
+    vector<vector<pair<int,long long>>> adj(n);
+    for(auto &it : roads){
+        adj[it[0]].push_back({it[1], it[2]});
+        adj[it[1]].push_back({it[0], it[2]});
+    }
+
+    using P = pair<long long,int>; // {distance, node}
+    priority_queue<P, vector<P>, greater<P>> pq;
+
+    vector<long long> dis(n, 1e18); // store shortest distances
+    vector<int> ways(n, 0);        // store number of shortest paths
+    dis[0] = 0;
+    ways[0] = 1;
+    pq.push({0, 0});
+
+    int mod = 1e9 + 7;
+
+    while(!pq.empty()){
+        auto [dist, node] = pq.top();
+        pq.pop();
+
+        if(dist > dis[node]) continue; // stale entry, skip
+
+        for(auto &it : adj[node]){
+            int adjN = it.first;
+            long long edW = it.second;
+
+            // Found a strictly shorter path
+            if(dist + edW < dis[adjN]){
+                dis[adjN] = dist + edW;
+                pq.push({dis[adjN], adjN});
+                ways[adjN] = ways[node];
+            } 
+            // Found another shortest path
+            else if(dist + edW == dis[adjN]) {
+                ways[adjN] = (ways[adjN] + ways[node]) % mod;
+            }
+        }
+    }
+    return ways[n-1] % mod;
+}
