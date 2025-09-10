@@ -599,7 +599,7 @@ vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int co
 
     vector<pair<int, int>> dirs = {{1,0}, {-1,0}, {0,1}, {0,-1}};
     while(!q.empty()){
-        auto [x,y] = q.front();
+        auto [x,y] = q.front(); // coordinates of sr and sc
         q.pop();
 
         for(auto [dx,dy] : dirs){
