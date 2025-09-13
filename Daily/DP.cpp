@@ -141,3 +141,19 @@ int minDistance(string word1, string word2) {
     }
     return dp[n][m];
 }
+
+// Target Sum
+int findTargetSumWays(vector<int>& nums, int target) {
+    unordered_map<int,int> mp;
+    mp[0] = 1;
+
+    for(int num : nums){
+        unordered_map<int,int> newMp;
+        for(auto &[sum, count] : mp){
+            newMp[sum + num] += count;
+            newMp[sum - num] += count;
+        }
+        mp = move(newMp);
+    }
+    return mp.count(target) ? mp[target] : 0;
+}
