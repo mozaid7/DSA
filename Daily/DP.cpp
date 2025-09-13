@@ -157,3 +157,10 @@ int findTargetSumWays(vector<int>& nums, int target) {
     }
     return mp.count(target) ? mp[target] : 0;
 }
+
+// Longest Palindromic Subsequence
+int longestPalindromeSubseq(string s) {
+    string t = s;
+    reverse(t.begin(), t.end()); // reverse the string and pass to the Original LCS function.
+    return longestCommonSubsequence(s, t);
+}
