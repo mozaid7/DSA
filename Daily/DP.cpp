@@ -164,3 +164,79 @@ int longestPalindromeSubseq(string s) {
     reverse(t.begin(), t.end()); // reverse the string and pass to the Original LCS function.
     return longestCommonSubsequence(s, t);
 }
+
+// WildCard Matching
+bool solve(string &str, string &pattern, int i, int j, vector<vector<int>> &dp){
+    if(i<0 && j<0){
+        return true;
+    }
+    if(i>=0 && j<0){
+        return false;
+    }
+    if(i<0 && j>= 0){
+        for(int k=0; k<=j; k++){
+            if(pattern[k] != '*'){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    if(dp[i][j] != -1){
+        return dp[i][j];
+    }
+
+    if(str[i] == pattern[j] || pattern[j] == '?'){
+        return dp[i][j] = solve(str, pattern, i-1, j-1, dp);
+    } else if(pattern[j] == '*'){
+        return dp[i][j] = (solve(str, pattern, i, j-1, dp) || solve(str, pattern, i-1, j, dp)); 
+    } else {
+        return false;
+    }
+}
+
+bool isMatch(string s, string p) {
+    vector<vector<int>> dp(s.length(), vector<int>(p.length(), -1));
+    return solve(s, p, s.length()-1, p.length()-1, dp);
+}
+
+// Rod Cutting Problem
+int f(int ind, int n, vector<int> &price, vector<vector<int>> &dp){
+	if(ind == 0){
+		return n * price[0];
+	}
+
+	if(dp[ind][n] != -1) return dp[ind][n];
+
+	int notTake = f(ind - 1, n, price, dp);
+	int take = INT_MIN;
+
+	int rodLength = ind + 1;
+	if(rodLength <= n){
+		take = price[ind] + f(ind, n-rodLength, price, dp);
+	}
+	return dp[ind][n] = max(take, notTake);
+}
+
+int cutRod(vector<int> &price, int n)
+{
+	vector<vector<int>> dp(n, vector<int>(n+1, -1));
+	return f(n-1, n, price, dp);
+}
+
+// Assign Cookies
+int findContentChildren(vector<int>& g, vector<int>& s) {
+    int n = g.size(); // greed
+    int m = s.size(); // cookies
+    sort(g.begin(), g.end());
+    sort(s.begin(), s.end());
+
+    int left = 0, right = 0;
+    while(left < n && right < m){
+        if(g[left] <= s[right]){
+            left++;
+        }
+        right++;
+    }
+    return left;
+}
