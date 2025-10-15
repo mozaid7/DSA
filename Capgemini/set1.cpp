@@ -565,3 +565,317 @@ int maxSubArray(vector<int>& nums){
     }
     return maxi;
 }
+
+// Longest even substring
+int longestEvenLengthSubstring(string s){
+    int n = s.length();
+    int maxLen = 0;
+
+    for(int i=0; i<n; i++){
+        for(int j=i+1; j<n; j+=2){
+            int len = j - i + 1;
+            int mid = i + len/2;
+            int leftsum = 0, rightsum = 0;
+
+            for (int k = i; k < mid; k++) {
+                leftsum += (s[k] - '0'); 
+            }
+
+            for (int k = mid; k <= j; k++) {
+                rightsum += (s[k] - '0');    // Convert char to int
+            }
+
+            if(leftsum == rightsum && len > maxLen){
+                maxLen = len;
+            }
+        }
+    }
+    return maxLen;
+}
+
+// Valid Pairs
+int countValidPairs(vector<int>& arr, int k){
+    unordered_set<int> numSet(arr.begin(), arr.end());
+    int count  =0;
+
+    for(int num : arr){
+        if(numSet.find(num + k) != numSet.end()){
+            count++;
+        }
+    }
+    return count;
+}
+
+// Min Cost to traverse
+int minCostToTraverse(vector<int>& arr, int k){
+    int n = arr.size();
+    if(n ==0) return 0;
+
+    vector<int> dp(n, INT_MAX);
+    dp[0] = arr[0];
+
+    for(int i=0; i<n; i++){
+        for(int j=1; j<=k && i + j < n; j++){
+            dp[i + j] = min(dp[i+j], dp[i] + arr[i+j]);
+        }
+    }
+    return dp[n-1];
+}
+
+// String conversion with circular alphabet
+int minConversionCostOptimized(string S, string T){
+    int s = S.length();
+    int t = T.length();
+    int total = 0;
+
+    for(int i=0; i<s; i++){
+        int minCost = INT_MAX;
+
+        for(int j=0; j<t; j++){
+            int diff = abs(S[i] - T[j]);
+            int cost = min(diff, 26-diff);
+            minCost = min(minCost, cost);
+        }
+        total += minCost;
+    }
+    return total; 
+}
+
+// Check for Nth Prime No.
+int check_prime(int n) {
+    if (n < 2) return 0;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int find_nth_prime(int n) {
+    if (n == 0) {
+        return 1;
+    }
+    
+    int ans = 0;
+    int i = 2;
+    
+    while (true) {
+        if (check_prime(i)) {
+            ans++;
+        }
+        if (ans == n) {
+            break;
+        }
+        i++;
+    }
+    
+    return i;
+}
+
+// Distinct Permutations of a String
+long long find_fact(int n) {
+    long long fact = 1;
+    for (int i = 1; i <= n; i++) {
+        fact *= i;
+    }
+    return fact;
+}
+
+long long countDistinctPermutations(const string& s) {
+    int n = s.size();
+    vector<int> fre(256, 0);  // Frequency array for all ASCII characters
+    
+    int i = 0;
+    while (i < n) {
+        int index = s[i];  // ASCII value of character
+        fre[index] += 1;
+        i += 1;
+    }
+    
+    long long total = find_fact(n);
+    
+    for (int i = 0; i < 256; i++) {
+        if (fre[i] > 1) {
+            total /= find_fact(fre[i]);
+        }
+    }
+    
+    return total;
+}
+
+// Query Solver
+int solveQueries(const vector<int>& arr, const vector<pair<int, int>>& queries){
+    int n = arr.size();
+    vector<int> sortedArr = arr;
+    sort(sortedArr.begin(), sortedArr.end());
+
+    for(const auto& query : queries){
+        int u = query.first;
+        int v = query.second;
+        int count = 0;
+
+        int maxi = max(u,v);
+        int mini = min(u,v);
+
+        for(int i=0; i<n; i++){
+            if(i > 0 && sortedArr[i] == sortedArr[i-1]) continue;
+            for(int j=i+1; j<n; j++){
+                int prod = sortedArr[i] * sortedArr[j];
+                int sum = sortedArr[i] + sortedArr[j];
+
+                if(prod == maxi && sum == mini){
+                    count++;
+                }
+            }
+        }
+        cout << count << endl;
+    }
+}
+
+// Max Product SubArray
+int maxProductSubarray(int arr[], int n) {
+    int maxProduct = arr[0], minProduct = arr[0], result = arr[0];
+    
+    for (int i = 1; i < n; i++) {
+        if (arr[i] < 0) {
+            swap(maxProduct, minProduct);  // Handle negative multiplication
+        }
+        
+        maxProduct = max(arr[i], maxProduct * arr[i]);
+        minProduct = min(arr[i], minProduct * arr[i]);
+        
+        result = max(result, maxProduct);
+    }
+    return result;
+}
+
+// Reverse Words in a String
+string reverseWords(string s) {
+    int n = s.size();
+    string temp = "";
+    vector<string> res;
+
+    for (int i = 0; i < n; i++) {
+        if (s[i] != ' ') {
+            temp += s[i];
+        } else {
+            if (!temp.empty()) {
+                res.push_back(temp);
+                temp = "";
+            }
+        }
+    }
+
+    if (!temp.empty()) {
+        res.push_back(temp);
+    }
+    
+    reverse(res.begin(), res.end());
+    string result = "";
+    for (int i = 0; i < res.size(); i++) {
+        result += res[i];
+        if (i < res.size() - 1) result += ' ';
+    }
+
+    return result;
+}
+
+// Sum of Diagonals of Array
+int sumOfDiagonals(int arr[][1000], int n) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += arr[i][i]; // Primary diagonal
+        sum += arr[i][n - 1 - i]; // Secondary diagonal
+    }
+    return sum;
+}
+
+// Count Set Bits
+int countSetBits(int n) {
+    int count = 0;
+    while (n) {
+        count += n & 1;
+        n >>= 1;
+    }
+    return count;
+}
+
+// Sub Array Sum equals K
+int subarraySum(vector<int>& nums, int k) {
+    int n = nums.size();
+    map<int, int>mpp;
+    mpp[0] = 1;
+    int preSum = 0; int cnt = 0;
+    for(int i=0; i<n; i++) {
+        preSum += nums[i];
+        int rem = preSum - k;
+        cnt += mpp[rem];
+        mpp[preSum] += 1;
+    }
+    return cnt;
+}
+
+// Move Zeroes
+void moveZeroes(vector<int>& nums) {
+    int index = 0;
+
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] != 0) {
+        nums[index++] = nums[i];
+        }
+    }
+
+    for (int i = index; i < nums.size(); i++) {
+        nums[i] = 0;
+    }
+}
+
+// Top K Frequent Elements
+vector<int> topKFrequent(vector<int>& nums, int k) {
+    unordered_map<int, int> freq;
+    for (int num : nums) freq[num]++;
+
+    priority_queue<pair<int, int>> pq;
+    for (auto& [num, count] : freq)
+        pq.push({count, num});
+
+    vector<int> res;
+    while (k--) {
+        res.push_back(pq.top().second);
+        pq.pop();
+    }
+    return res;
+}
+
+// Group Anagrams
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    unordered_map<string, vector<string>> mp;
+    
+    for(auto& str : strs){
+        string word = str;
+        sort(word.begin(), word.end());
+        mp[word].push_back(str);
+    }
+
+    vector<vector<string>> ans;
+    for(auto x: mp){
+        ans.push_back(x.second);
+    }
+    return ans;
+}
+
+// Best Time to Buy and Sell Stock
+int maxProfit(vector<int>& prices) {
+    int minPrice = INT_MAX, maxProfit = 0;
+
+    for (int price : prices) {
+        if (price < minPrice) {
+            minPrice = price;
+        } else {
+            maxProfit = max(maxProfit, price - minPrice);
+        }
+    }
+
+    return maxProfit;
+}
